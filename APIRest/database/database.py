@@ -6,4 +6,4 @@ def obtener_conexion():
                                 user="root",
                                 password="admin",
                                 port=3306,
-                                db="database")
+                                db="restaurant")
