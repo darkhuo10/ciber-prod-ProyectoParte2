@@ -14,3 +14,5 @@ CREATE TABLE usuarios(
     fechaUltimoAcceso DATE
 );
 INSERT INTO `usuarios` (`usuario`, `clave`, `perfil`, `fechaUltimoAcceso`) VALUES ('root', '1234', 'admin', '2022-03-01');
+
+-- prueba
