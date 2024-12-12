@@ -1,3 +1,7 @@
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     idwaiter = db.Column(db.Integer, nullable=False)
@@ -35,7 +39,7 @@ class Product(db.Model):
     number = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Float, nullable=False)
 
-    def __init__(self, name, description=None, number=0 price=0.0):
+    def __init__(self, name, description=None, number=0, price=0.0):
         self.name = name
         self.number = number
         self.description = description
