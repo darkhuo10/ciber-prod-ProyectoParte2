@@ -1,0 +1,55 @@
+version: '3.9'
+
+services:
+  apache:
+    build: ./apache
+    ports:
+      - "7777:80"
+    volumes:
+      - ./app/static:/var/www/html/static
+    depends_on:
+      - python
+    environment:
+      - APACHE_LOG_DIR=/var/log/apache2
+    networks:
+      - restaurante-net
+
+  python:
+    build: ./app
+    expose:
+      - "8080"
+    environment:
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+      - DB_NAME=Restaurant
+      - DB_USER=root
+      - DB_PASSWORD=secret
+    networks:
+      - restaurante-net
+
+  mariadb:
+    image: mariadb:latest
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=secret
+      - MYSQL_DATABASE=Restaurant
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=admin123
+    volumes:
+      - ./mariadb:/docker-entrypoint-initdb.d
+    networks:
+      - restaurante-net
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    restart: always
+    ports:
+      - "8081:80"
+    environment:
+      - PMA_HOST=mariadb
+      - MYSQL_ROOT_PASSWORD=secret
+    networks:
+      - restaurante-net
+
+networks:
+  restaurante-net:
