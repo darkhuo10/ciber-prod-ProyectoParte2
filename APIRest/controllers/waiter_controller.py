@@ -1,70 +1,94 @@
-from flask import request, jsonify
-from models import models
+from database.database import obtener_conexion
+import json
 
-# Create a new waiter
-def create_waiter():
-    data = request.get_json()
-    identification = data.get('identification')
-    firstname = data.get('firstname')
-    lastname1 = data.get('lastname1')
-    lastname2 = data.get('lastname2', None)
-    phone = data.get('phone', None)
-    email = data.get('email', None)
+def create_waiter(data):
+    content_type = request.headers.get('Content-Type')
+    if content_type == 'application/json':
+        try:
+            conn = obtener_conexion()
+            cursor = conn.cursor()
+            query = "INSERT INTO waiter (identification, firstname, lastname1, lastname2, phone, email) VALUES (%s, %s, %s, %s, %s, %s)"
+            cursor.execute(query, (data['identification'], data['firstname'], data['lastname1'], data.get('lastname2'), data.get('phone'), data.get('email')))
+            conn.commit()
+            cursor.close()
+            conn.close()
+            ret = {"status": "OK", "message": "Waiter created successfully"}
+            code = 200
+        except Exception as e:
+            print(f"Exception while creating waiter: {e}")
+            ret = {"status": "ERROR"}
+            code = 500
+    else:
+        ret = {"status": "Bad request"}
+        code = 401
+    return json.dumps(ret), code
 
-    new_waiter = Waiter(identification=identification, firstname=firstname, lastname1=lastname1,
-                        lastname2=lastname2, phone=phone, email=email)
+def get_waiter(waiter_id):
+    content_type = request.headers.get('Content-Type')
+    if content_type == 'application/json':
+        try:
+            conn = obtener_conexion()
+            cursor = conn.cursor()
+            query = "SELECT * FROM waiter WHERE id = %s"
+            cursor.execute(query, (waiter_id,))
+            waiter = cursor.fetchone()
+            cursor.close()
+            conn.close()
+            if waiter is None:
+                ret = {"status": "ERROR", "message": "Waiter not found"}
+                code = 404
+            else:
+                ret = {"status": "OK", "waiter": waiter}
+                code = 200
+        except Exception as e:
+            print(f"Exception while fetching waiter: {e}")
+            ret = {"status": "ERROR"}
+            code = 500
+    else:
+        ret = {"status": "Bad request"}
+        code = 401
+    return json.dumps(ret), code
 
-    db.session.add(new_waiter)
-    db.session.commit()
+def update_waiter(waiter_id, data):
+    content_type = request.headers.get('Content-Type')
+    if content_type == 'application/json':
+        try:
+            conn = obtener_conexion()
+            cursor = conn.cursor()
+            query = "UPDATE waiter SET identification = %s, firstname = %s, lastname1 = %s, lastname2 = %s, phone = %s, email = %s WHERE id = %s"
+            cursor.execute(query, (data['identification'], data['firstname'], data['lastname1'], data.get('lastname2'), data.get('phone'), data.get('email'), waiter_id))
+            conn.commit()
+            cursor.close()
+            conn.close()
+            ret = {"status": "OK", "message": "Waiter updated successfully"}
+            code = 200
+        except Exception as e:
+            print(f"Exception while updating waiter: {e}")
+            ret = {"status": "ERROR"}
+            code = 500
+    else:
+        ret = {"status": "Bad request"}
+        code = 401
+    return json.dumps(ret), code
 
-    return jsonify({"message": "Waiter created", "id": new_waiter.id}), 201
-
-
-# Get a list of all waiters
-def get_all_waiters():
-    waiters = Waiter.query.all()
-    waiters_list = [{"id": waiter.id, "identification": waiter.identification, "firstname": waiter.firstname,
-                     "lastname1": waiter.lastname1, "lastname2": waiter.lastname2, "phone": waiter.phone, "email": waiter.email} for waiter in waiters]
-    return jsonify(waiters_list), 200
-
-
-# Get a single waiter by id
-def get_waiter(id):
-    waiter = Waiter.query.get(id)
-    if not waiter:
-        return jsonify({"message": "Waiter not found"}), 404
-    
-    waiter_data = {"id": waiter.id, "identification": waiter.identification, "firstname": waiter.firstname,
-                   "lastname1": waiter.lastname1, "lastname2": waiter.lastname2, "phone": waiter.phone, "email": waiter.email}
-    return jsonify(waiter_data), 200
-
-
-# Update a waiter by id
-def update_waiter(id):
-    data = request.get_json()
-    waiter = Waiter.query.get(id)
-    if not waiter:
-        return jsonify({"message": "Waiter not found"}), 404
-    
-    waiter.identification = data.get('identification', waiter.identification)
-    waiter.firstname = data.get('firstname', waiter.firstname)
-    waiter.lastname1 = data.get('lastname1', waiter.lastname1)
-    waiter.lastname2 = data.get('lastname2', waiter.lastname2)
-    waiter.phone = data.get('phone', waiter.phone)
-    waiter.email = data.get('email', waiter.email)
-
-    db.session.commit()
-    
-    return jsonify({"message": "Waiter updated"}), 200
-
-
-# Delete a waiter by id
-def delete_waiter(id):
-    waiter = Waiter.query.get(id)
-    if not waiter:
-        return jsonify({"message": "Waiter not found"}), 404
-    
-    db.session.delete(waiter)
-    db.session.commit()
-    
-    return jsonify({"message": "Waiter deleted"}), 200
+def delete_waiter(waiter_id):
+    content_type = request.headers.get('Content-Type')
+    if content_type == 'application/json':
+        try:
+            conn = obtener_conexion()
+            cursor = conn.cursor()
+            query = "DELETE FROM waiter WHERE id = %s"
+            cursor.execute(query, (waiter_id,))
+            conn.commit()
+            cursor.close()
+            conn.close()
+            ret = {"status": "OK", "message": "Waiter deleted successfully"}
+            code = 200
+        except Exception as e:
+            print(f"Exception while deleting waiter: {e}")
+            ret = {"status": "ERROR"}
+            code = 500
+    else:
+        ret = {"status": "Bad request"}
+        code = 401
+    return json.dumps(ret), code
