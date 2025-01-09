@@ -3,7 +3,7 @@ from controllers.waiter_controller import create_waiter, get_waiter, update_wait
 
 waiter_bp = Blueprint('waiter_bp', __name__)
 
-@waiter_bp.route('/waiters', methods=['POST'])
+@waiter_bp.route('/waiter/create', methods=['POST'])
 def create_waiter_route():
     return jsonify(create_waiter(request.json)), 201
 
@@ -21,3 +21,7 @@ def update_waiter_route(waiter_id):
 @waiter_bp.route('/waiters/<int:waiter_id>', methods=['DELETE'])
 def delete_waiter_route(waiter_id):
     return jsonify(delete_waiter(waiter_id))
+
+@waiter_bp.route('/test', methods=['GET'])
+def test():
+    return jsonify("Hello")

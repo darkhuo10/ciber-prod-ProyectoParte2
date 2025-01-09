@@ -1,6 +1,6 @@
 from database.database import obtener_conexion
 import json
-
+from flask import request
 def create_waiter(data):
     content_type = request.headers.get('Content-Type')
     if content_type == 'application/json':
