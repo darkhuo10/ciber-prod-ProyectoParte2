@@ -19,7 +19,7 @@ CREATE TABLE Users (
     idwaiter INT NOT NULL,
     username VARCHAR(30) UNIQUE NOT NULL,
     password VARCHAR(100) NOT NULL,
-    FOREIGN KEY (idwaiter) REFERENCES Waiter(id) ON DELETE CASCADE
+    FOREIGN KEY (idwaiter) REFERENCES Waiter(id) ON DELETE CASCADE -- o update??
 );
 
 -- Tabla PRODUCTOS

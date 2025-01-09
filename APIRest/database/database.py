@@ -2,8 +2,8 @@ import os
 import pymysql
 
 def obtener_conexion():
-    return pymysql.connect(host="localhost",
-                                user="root",
-                                password="admin",
-                                port=3306,
-                                db="restaurant")
+    return pymysql.connect(host=os.environ.get('DB_HOST'),
+                                user=os.environ.get('DB_USERNAME'),
+                                password=os.environ.get('DB_PASSWORD'),
+                                port=int(os.environ.get('DB_PORT', 3306)),
+                                db=os.environ.get('DB_DATABASE'))
