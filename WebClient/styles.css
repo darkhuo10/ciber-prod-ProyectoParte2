@@ -1,0 +1,174 @@
+/* Reset some default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+.container {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 1000px; /* Updated max-width */
+    padding: 30px;
+    text-align: center; /* Center content for general layout */
+}
+
+h1 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+h2 {
+    color: #333;
+    margin-top: 20px;
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #a3b3f8; /* Tono azul en el fondo de los encabezados */
+    color: black;
+    font-weight: bold;
+}
+
+td {
+    background-color: #f9f9f9;
+}
+
+tr:hover td {
+    background-color: #f1f1f1;
+}
+
+/* Button for loading data */
+.load-button {
+    padding: 12px 25px;
+    background-color: #5877ff; /* Azul de fondo */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: inline-block; /* Cambio a inline-block para alinearlo mejor */
+    margin: 0 auto 30px;
+}
+
+.load-button:hover {
+    background-color: #4a66cc; /* Azul más oscuro cuando se pasa el ratón */
+}
+
+/* Form styling */
+form {
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+}
+
+input[type="text"],
+input[type="tel"],
+input[type="email"],
+button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    background-color: #f9f9f9;
+}
+
+input[type="text"]:focus,
+input[type="tel"]:focus,
+input[type="email"]:focus {
+    outline: none;
+    border-color: #5877ff;
+}
+
+/* Aseguramos que todos los botones de tipo submit en cualquier formulario tengan el fondo azul */
+form button[type="submit"] {
+    padding: 12px 25px;
+    background-color: #5877ff; /* Azul de fondo */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: block;
+    margin: 0 auto 30px;
+}
+
+form button[type="submit"]:hover {
+    background-color: #4a66cc; /* Azul más oscuro cuando se pasa el ratón */
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 600px) {
+    body {
+        padding: 20px;
+    }
+
+    .container {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    button[type="submit"],
+    .load-button {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+
+    input[type="text"],
+    input[type="tel"],
+    input[type="email"] {
+        font-size: 14px;
+    }
+
+    table th, table td {
+        font-size: 14px;
+        padding: 10px;
+    }
+}

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listar Usuarios, Camareros y Productos</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to the external CSS file -->
+</head>
+<body>
+    <div class="container">
+        <h1>Listado de Usuarios, Camareros y Productos</h1>
+
+        <button onclick="loadData()" class="load-button">Cargar Datos</button>
+
+        <!-- Tablas para mostrar los datos -->
+        <h2>Usuarios</h2>
+        <table id="usersTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>ID Camarero</th>
+                    <th>Nombre de Usuario</th>
+                    <th>Contraseña</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Los datos de los usuarios se agregarán aquí dinámicamente -->
+            </tbody>
+        </table>
+
+        <h2>Camareros</h2>
+        <table id="waitersTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Identificación</th>
+                    <th>Nombre</th>
+                    <th>Apellido 1</th>
+                    <th>Apellido 2</th>
+                    <th>Teléfono</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Los datos de los camareros se agregarán aquí dinámicamente -->
+            </tbody>
+        </table>
+
+        <h2>Productos</h2>
+        <table id="productsTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Los datos de los productos se agregarán aquí dinámicamente -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Vinculamos el archivo JavaScript externo -->
+    <script src="list.js"></script>
+</body>
+</html>
