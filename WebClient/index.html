@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos - Restaurante</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Bienvenido al Restaurante</h1>
+
+        <button onclick="loadProducts()">Cargar Productos</button>
+        
+        <h2>Productos Disponibles</h2>
+        <table id="productsTable">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Los productos se cargarán aquí dinámicamente -->
+            </tbody>
+        </table>
+
+        <p><a href="upload.html">Subir Archivos (Menús, Imágenes, etc.)</a></p>
+        <p><a href="logout.html">Cerrar Sesión</a></p>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

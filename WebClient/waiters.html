@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Camareros</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Gestión de Camareros</h1>
+        
+        <!-- Botón para cargar los camareros -->
+        <button onclick="loadWaiters()">Cargar Camareros</button>
+
+        <h2>Camareros</h2>
+        <table id="waitersTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Teléfono</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Los camareros se cargarán aquí dinámicamente -->
+            </tbody>
+        </table>
+
+        <p><a href="index.html">Volver a la Página Principal</a></p>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
