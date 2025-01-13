@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "nombre": "Pizza Margarita",
+        "descripcion": "Pizza con tomate, queso y albahaca",
+        "precio": 8.5
+    },
+    {
+        "id": 2,
+        "nombre": "Ensalada César",
+        "descripcion": "Ensalada con pollo, lechuga y aderezo César",
+        "precio": 7.0
+    },
+    {
+        "id": 3,
+        "nombre": "Spaghetti Carbonara",
+        "descripcion": "Spaghetti con tocino, queso parmesano y huevo",
+        "precio": 9.5
+    },
+    {
+        "id": 4,
+        "nombre": "Tiramisu",
+        "descripcion": "Postre italiano con capas de café, queso mascarpone y cacao",
+        "precio": 5.0
+    },
+    {
+        "id": 5,
+        "nombre": "Ravioli de Espinacas",
+        "descripcion": "Pasta rellena de espinacas y ricotta con salsa de tomate",
+        "precio": 11.0
+    }
+]
