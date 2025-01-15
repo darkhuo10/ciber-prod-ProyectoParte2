@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Camareros</title>
+    <link rel="stylesheet" href="cssCamareros.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Gestión de Camareros</h1>
+        <button onclick="loadWaiters()">Cargar Camareros</button>
+        <button onclick="document.getElementById('waiterUpload').click()">Subir Camareros (JSON)</button>
+        <input type="file" id="waiterUpload" accept=".json" style="display:none;" onchange="uploadWaiters(event)">
+        <h2>Camareros</h2>
+        <table id="waitersTable">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Los camareros se cargarán aquí dinámicamente -->
+            </tbody>
+        </table>
+        <button onclick="openLogoutModal()">Cerrar Sesión</button>
+        <button onclick="goToMainPage()">Volver a la Página Principal</button>
+    </div>
+
+    <!-- Modal para Editar Camarero -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Editar Camarero</h2>
+            <form id="editForm">
+                <label for="editName">Nombre:</label>
+                <input type="text" id="editName" name="name" required>
+                <label for="editLastName">Apellido:</label>
+                <input type="text" id="editLastName" name="lastName" required><br>
+                <label for="editPhone">Teléfono:</label>
+                <input type="text" id="editPhone" name="phone" required>
+                <label for="editEmail">Email:</label>
+                <input type="email" id="editEmail" name="email" required>
+                <label for="editPassword">Contraseña:</label>
+                <input type="password" id="editPassword" name="password" required>
+                <button type="button" id="showPasswordButton" onclick="togglePasswordVisibility()">Ver Contraseña</button><br>
+                <button type="submit">Guardar Cambios</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para Cerrar Sesión -->
+    <div id="logoutModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeLogoutModal()">&times;</span>
+            <h2>¿Estás seguro de que quieres cerrar sesión?</h2>
+            <button onclick="logout()">Aceptar</button>
+            <button onclick="closeLogoutModal()">Cancelar</button>
+        </div>
+    </div>
+
+    <script src="scriptsCamareros.js"></script>
+    <script src="scripts.js"></script>
+</body>
+</html>

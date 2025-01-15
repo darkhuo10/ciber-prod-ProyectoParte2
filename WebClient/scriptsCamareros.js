@@ -1,113 +1,127 @@
-document.addEventListener("DOMContentLoaded", function() {
-    loadWaiters();
-});
-
-let currentWaiterId = null; // Track the current waiter for editing
+let waiters = [
+    { id: 1, name: 'Juan', lastName: 'Pérez', phone: '123456789', email: 'juan@example.com', password: '1234' },
+    { id: 2, name: 'Ana', lastName: 'Gómez', phone: '987654321', email: 'ana@example.com', password: 'abcd' }
+];
 
 function loadWaiters() {
-    // Sample data for waiters
-    const waiters = [
-        { id: 1, nombre: "Juan", apellido: "Perez", telefono: "123456789", email: "juan.perez@example.com", password: "secret123" },
-        { id: 2, nombre: "Ana", apellido: "Gomez", telefono: "987654321", email: "ana.gomez@example.com", password: "password456" },
-        // Add more waiters as needed
-    ];
+    const tableBody = document.querySelector("#waitersTable tbody");
+    tableBody.innerHTML = '';
 
-    addWaitersToTable(waiters);
-}
-
-function addWaitersToTable(waiters) {
-    const tableBody = document.getElementById("waitersTable").getElementsByTagName("tbody")[0];
-    waiters.forEach(function(waiter) {
-        const row = tableBody.insertRow();
-        row.insertCell(0).textContent = waiter.id;
-        row.insertCell(1).textContent = waiter.nombre;
-        row.insertCell(2).textContent = waiter.apellido;
-        row.insertCell(3).textContent = waiter.telefono;
-        row.insertCell(4).textContent = waiter.email;
-        const actionsCell = row.insertCell(5);
-        const editButton = document.createElement("button");
-        editButton.textContent = "Editar";
-        editButton.onclick = function() {
-            currentWaiterId = waiter.id;
-            enableEditing(row, waiter);
-        };
-        actionsCell.appendChild(editButton);
-        const deleteButton = document.createElement("button");
-        deleteButton.textContent = "Eliminar";
-        deleteButton.onclick = function() {
-            tableBody.deleteRow(row.rowIndex - 1);
-        };
-        actionsCell.appendChild(deleteButton);
+    waiters.forEach(waiter => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${waiter.name}</td>
+            <td>${waiter.lastName}</td>
+            <td>
+                <button class="edit-btn" onclick="openEditModal(${waiter.id})">Editar</button>
+                <button class="delete-btn" onclick="deleteWaiter(${waiter.id})">Eliminar</button>
+            </td>
+        `;
+        tableBody.appendChild(row);
     });
 }
 
-function enableEditing(row, waiter) {
-    row.cells[1].innerHTML = `<input type='text' value='${waiter.nombre}' />`;
-    row.cells[2].innerHTML = `<input type='text' value='${waiter.apellido}' />`;
-    row.cells[3].innerHTML = `<input type='text' value='${waiter.telefono}' />`;
-    row.cells[4].innerHTML = `<input type='text' value='${waiter.email}' />`;
+function openEditModal(id) {
+    const waiter = waiters.find(waiter => waiter.id === id) || { id: null, name: '', lastName: '', phone: '', email: '', password: '' };
 
-    const passwordCell = document.createElement("td");
-    passwordCell.innerHTML = `Contraseña: <input type='password' value='${waiter.password}' />`;
-    row.appendChild(passwordCell); // Add the password cell to the row
+    document.getElementById('editName').value = waiter.name;
+    document.getElementById('editLastName').value = waiter.lastName;
+    document.getElementById('editPhone').value = waiter.phone;
+    document.getElementById('editEmail').value = waiter.email;
+    document.getElementById('editPassword').value = waiter.password;
 
-    const actionsCell = row.cells[5];
-    actionsCell.innerHTML = "";
+    // Asegúrate de ocultar la contraseña y restablecer el texto del botón
+    const passwordField = document.getElementById('editPassword');
+    const button = document.getElementById('showPasswordButton');
+    passwordField.type = 'password';
+    button.textContent = 'Ver Contraseña';
 
-    const saveButton = document.createElement("button");
-    saveButton.textContent = "Guardar";
-    saveButton.onclick = function() {
-        saveChanges(row, waiter, passwordCell);
+    const modal = document.getElementById('editModal');
+    modal.style.display = 'block';
+
+    document.getElementById('editForm').onsubmit = function(event) {
+        event.preventDefault();
+        waiter.name = document.getElementById('editName').value;
+        waiter.lastName = document.getElementById('editLastName').value;
+        waiter.phone = document.getElementById('editPhone').value;
+        waiter.email = document.getElementById('editEmail').value;
+        waiter.password = document.getElementById('editPassword').value;
+
+        if (waiter.id === null) {
+            waiter.id = waiters.length ? waiters[waiters.length - 1].id + 1 : 1;
+            waiters.push(waiter);
+        }
+
+        modal.style.display = 'none';
+        loadWaiters();
     };
-    actionsCell.appendChild(saveButton);
-
-    const cancelButton = document.createElement("button");
-    cancelButton.textContent = "Cancelar";
-    cancelButton.onclick = function() {
-        cancelEditing(row, waiter);
-    };
-    actionsCell.appendChild(cancelButton);
 }
 
-function saveChanges(row, waiter, passwordCell) {
-    waiter.nombre = row.cells[1].getElementsByTagName('input')[0].value;
-    waiter.apellido = row.cells[2].getElementsByTagName('input')[0].value;
-    waiter.telefono = row.cells[3].getElementsByTagName('input')[0].value;
-    waiter.email = row.cells[4].getElementsByTagName('input')[0].value;
-    waiter.password = passwordCell.getElementsByTagName('input')[0].value;
-
-    row.cells[1].textContent = waiter.nombre;
-    row.cells[2].textContent = waiter.apellido;
-    row.cells[3].textContent = waiter.telefono;
-    row.cells[4].textContent = waiter.email;
-    passwordCell.remove(); // Remove the password cell
-
-    row.cells[5].innerHTML = `<button onclick='enableEditing(this.parentElement.parentElement, ${JSON.stringify(waiter)})'>Editar</button>
-                              <button onclick='this.parentElement.parentElement.parentElement.deleteRow(this.parentElement.parentElement.rowIndex - 1)'>Eliminar</button>`;
-    currentWaiterId = null;
+function closeModal() {
+    const passwordField = document.getElementById('editPassword');
+    passwordField.type = 'password';  // Ocultar la contraseña si se cierra el modal
+    document.getElementById('editModal').style.display = 'none';
+    document.getElementById('editForm').reset(); // Reiniciar el formulario para agregar nuevos camareros
 }
 
-function cancelEditing(row, waiter) {
-    row.cells[1].textContent = waiter.nombre;
-    row.cells[2].textContent = waiter.apellido;
-    row.cells[3].textContent = waiter.telefono;
-    row.cells[4].textContent = waiter.email;
+function deleteWaiter(id) {
+    waiters = waiters.filter(waiter => waiter.id !== id);
+    loadWaiters();
+}
 
-    row.cells[5].innerHTML = `<button onclick='enableEditing(this.parentElement.parentElement, ${JSON.stringify(waiter)})'>Editar</button>
-                              <button onclick='this.parentElement.parentElement.parentElement.deleteRow(this.parentElement.parentElement.rowIndex - 1)'>Eliminar</button>`;
-    const passwordCell = row.lastChild; // Assuming the password cell is the last child
-    if (passwordCell.innerHTML.includes("Contraseña:")) {
-        passwordCell.remove(); // Remove the password cell if present
+function togglePasswordVisibility() {
+    const passwordField = document.getElementById('editPassword');
+    const button = document.getElementById('showPasswordButton');
+
+    if (passwordField.type === "password") {
+        passwordField.type = "text"; // Muestra la contraseña
+        button.textContent = "Ocultar Contraseña"; // Cambia el texto del botón
+    } else {
+        passwordField.type = "password"; // Oculta la contraseña
+        button.textContent = "Ver Contraseña"; // Restaura el texto original del botón
     }
-    currentWaiterId = null;
 }
 
 function uploadWaiters(event) {
     const file = event.target.files[0];
     const reader = new FileReader();
+
     reader.onload = function(e) {
-        const newWaiters = JSON.parse(e.target.result);
-        addWaitersToTable(newWaiters);
+        try {
+            const waitersData = JSON.parse(e.target.result);
+
+            if (Array.isArray(waitersData)) {
+                waiters = waitersData;
+                loadWaiters();
+            } else {
+                alert("El archivo debe contener un array de camareros.");
+            }
+        } catch (error) {
+            alert("Hubo un error al procesar el archivo JSON.");
+        }
     };
+
     reader.readAsText(file);
+}
+
+function openLogoutModal() {
+    document.getElementById('logoutModal').style.display = 'block';
+}
+
+function closeLogoutModal() {
+    document.getElementById('logoutModal').style.display = 'none';
+}
+
+function logout() {
+    window.location.href = 'login.html'; 
+}
+
+window.onclick = function(event) {
+    if (event.target == document.getElementById('logoutModal')) {
+        closeLogoutModal();
+    }
+}
+
+function goToMainPage() {
+    window.location.href = "index.html"; // Redirige a la página principal
 }

@@ -1,146 +1,105 @@
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('loadProducts').addEventListener('click', loadProducts);
-    document.getElementById('productUploadButton').addEventListener('click', () => document.getElementById('productUpload').click());
-    document.getElementById('productUpload').addEventListener('change', uploadProducts);
-    document.getElementById('editProductForm').addEventListener('submit', saveProductChanges);
-    document.getElementById('addProductForm').addEventListener('submit', addProduct);
+document.addEventListener("DOMContentLoaded", function() {
+    // Cargar los usuarios
+    if (window.location.pathname === "/index.html") {
+        fetchUsers();
+    }
+
+    // Manejo del formulario de registro
+    if (document.getElementById("registerForm")) {
+        document.getElementById("registerForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            fetch("/api/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ username, password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = "index.html";
+                } else {
+                    alert("Error al registrar el usuario.");
+                }
+            });
+        });
+    }
+
+    // Manejo del formulario de actualización
+    if (document.getElementById("updateForm")) {
+        const userId = new URLSearchParams(window.location.search).get("id");
+        fetch(`/api/users/${userId}`)
+            .then(response => response.json())
+            .then(user => {
+                document.getElementById("userId").value = user.id;
+                document.getElementById("username").value = user.username;
+                document.getElementById("password").value = user.password;
+            });
+
+        document.getElementById("updateForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const userId = document.getElementById("userId").value;
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            fetch(`/api/users/${userId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ username, password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = "index.html";
+                } else {
+                    alert("Error al actualizar el usuario.");
+                }
+            });
+        });
+    }
 });
 
-async function loadProducts() {
-    const tbody = document.querySelector('#productsTable tbody');
-    tbody.innerHTML = '';
+function fetchUsers() {
+    fetch("/api/users")
+        .then(response => response.json())
+        .then(users => {
+            const tbody = document.querySelector("#userTable tbody");
+            tbody.innerHTML = "";
 
-    try {
-        const response = await fetch('/api/products');
-        const productos = await response.json();
+            users.forEach(user => {
+                const tr = document.createElement("tr");
 
-        productos.forEach(producto => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${producto.nombre}</td>
-                <td>${producto.descripcion}</td>
-                <td>${producto.precio}</td>
-                <td>
-                    <button onclick="editProduct(${producto.id})">Editar</button>
-                    <button onclick="deleteProduct(${producto.id})">Eliminar</button>
-                </td>
-            `;
-            tbody.appendChild(tr);
-        });
-    } catch (error) {
-        console.error('Error al cargar los productos:', error);
-    }
-}
-
-async function uploadProducts(event) {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.onload = async function(e) {
-        const data = JSON.parse(e.target.result);
-
-        try {
-            const response = await fetch('/api/upload/products', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
+                tr.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${user.username}</td>
+                    <td>
+                        <a href="update.html?id=${user.id}"><button>Editar</button></a>
+                        <button onclick="deleteUser(${user.id})">Eliminar</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
             });
-            const result = await response.json();
-            console.log('Productos subidos a la API:', result);
-            loadProducts();
-        } catch (error) {
-            console.error('Error al subir los productos:', error);
+        });
+}
+
+function deleteUser(id) {
+    fetch(`/api/users/${id}`, {
+        method: "DELETE"
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            fetchUsers(); // Recargar la lista de usuarios
+        } else {
+            alert("Error al eliminar el usuario.");
         }
-    };
-    reader.readAsText(file);
-}
-
-async function editProduct(productId) {
-    try {
-        const response = await fetch(`/api/products/${productId}`);
-        const producto = await response.json();
-
-        if (producto) {
-            document.getElementById('editProductId').value = producto.id;
-            document.getElementById('editProductName').value = producto.nombre;
-            document.getElementById('editProductDescription').value = producto.descripcion;
-            document.getElementById('editProductPrice').value = producto.precio;
-            document.getElementById('editProductModal').style.display = 'block';
-        }
-    } catch (error) {
-        console.error('Error al obtener el producto:', error);
-    }
-}
-
-async function saveProductChanges(event) {
-    event.preventDefault();
-
-    const productId = parseInt(document.getElementById('editProductId').value);
-    const productName = document.getElementById('editProductName').value;
-    const productDescription = document.getElementById('editProductDescription').value;
-    const productPrice = parseFloat(document.getElementById('editProductPrice').value);
-
-    try {
-        const response = await fetch(`/api/products/${productId}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                nombre: productName,
-                descripcion: productDescription,
-                precio: productPrice
-            })
-        });
-        const result = await response.json();
-        console.log('Producto actualizado:', result);
-        closeModal();
-        loadProducts();
-    } catch (error) {
-        console.error('Error al guardar los cambios del producto:', error);
-    }
-}
-
-function closeModal() {
-    document.getElementById('editProductModal').style.display = 'none';
-}
-
-async function addProduct(event) {
-    event.preventDefault();
-
-    const productName = document.getElementById('addProductName').value;
-    const productDescription = document.getElementById('addProductDescription').value;
-    const productPrice = parseFloat(document.getElementById('addProductPrice').value);
-
-    try {
-        const response = await fetch('/api/products', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                nombre: productName,
-                descripcion: productDescription,
-                precio: productPrice
-            })
-        });
-        const result = await response.json();
-        console.log('Producto añadido:', result);
-        closeAddModal();
-        loadProducts();
-    } catch (error) {
-        console.error('Error al añadir el producto:', error);
-    }
-}
-
-function closeAddModal() {
-    document.getElementById('addProductModal').style.display = 'none';
-}
-
-async function deleteProduct(productId) {
-    try {
-        const response = await fetch(`/api/products/${productId}`, {
-            method: 'DELETE'
-        });
-        const result = await response.json();
-        console.log('Producto eliminado:', result);
-        loadProducts();
-    } catch (error) {
-        console.error('Error al eliminar el producto:', error);
-    }
+    });
 }
