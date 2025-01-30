@@ -1,6 +1,5 @@
 // Usuarios de prueba
-const users = [
-    {
+const users = [{
         username: 'usuario1',
         password: 'password1'
     },
@@ -48,6 +47,29 @@ async function logout() {
     }
 }
 
+function togglePasswordVisibility(passwordFieldId, buttonId) {
+    const passwordField = document.getElementById(passwordFieldId);
+    const button = document.getElementById(buttonId);
+
+    if (passwordField.type === "password") {
+        passwordField.type = "text"; // Muestra la contraseña
+        button.textContent = "Ocultar Contraseña"; // Cambia el texto del botón
+    } else {
+        passwordField.type = "password"; // Oculta la contraseña
+        button.textContent = "Ver Contraseña"; // Restaura el texto original del botón
+    }
+}
+
+function validatePassword() {
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    if (password !== confirmPassword) {
+        alert("Las contraseñas no coinciden. Por favor, inténtalo de nuevo.");
+        return false;
+    }
+    return true;
+}
+
 // Cerrar el modal de cierre de sesión si se hace clic fuera de él
 window.onclick = function(event) {
     if (event.target == document.getElementById('logoutModal')) {
@@ -82,7 +104,10 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ username, password }),
+                body: JSON.stringify({
+                    username,
+                    password
+                }),
             });
 
             const result = await response.json();

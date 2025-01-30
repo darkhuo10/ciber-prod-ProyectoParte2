@@ -46,7 +46,7 @@
                 <input type="email" id="editEmail" name="email" required>
                 <label for="editPassword">Contraseña:</label>
                 <input type="password" id="editPassword" name="password" required>
-                <button type="button" id="showPasswordButton" onclick="togglePasswordVisibility()">Ver Contraseña</button><br>
+                <button type="button" id="showPasswordButton" onclick="togglePasswordVisibility('editPassword', 'showPasswordButton')">Ver Contraseña</button><br>
                 <button type="submit">Guardar Cambios</button>
             </form>
         </div>
@@ -61,6 +61,5 @@
             <button onclick="closeLogoutModal()">Cancelar</button>
         </div>
     </div>
-   
 </body>
 </html>

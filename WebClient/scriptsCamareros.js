@@ -68,15 +68,4 @@ function deleteWaiter(id) {
     loadWaiters();
 }
 
-function togglePasswordVisibility() {
-    const passwordField = document.getElementById('editPassword');
-    const button = document.getElementById('showPasswordButton');
 
-    if (passwordField.type === "password") {
-        passwordField.type = "text"; // Muestra la contraseña
-        button.textContent = "Ocultar Contraseña"; // Cambia el texto del botón
-    } else {
-        passwordField.type = "password"; // Oculta la contraseña
-        button.textContent = "Ver Contraseña"; // Restaura el texto original del botón
-    }
-}
