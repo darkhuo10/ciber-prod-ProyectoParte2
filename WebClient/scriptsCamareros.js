@@ -1,6 +1,6 @@
 let waiters = [
-    { id: 1, name: 'Juan', lastName: 'Pérez', phone: '123456789', email: 'juan@example.com', password: '1234' },
-    { id: 2, name: 'Ana', lastName: 'Gómez', phone: '987654321', email: 'ana@example.com', password: 'abcd' }
+    { id: 1, name: 'usuario1', lastName: 'apellido1', phone: '123456789', email: 'usuario1@example.com', password: 'password1' },
+    { id: 2, name: 'usuario2', lastName: 'apellido2', phone: '987654321', email: 'usuario2@example.com', password: 'password2' }
 ];
 
 function loadWaiters() {
@@ -30,7 +30,6 @@ function openEditModal(id) {
     document.getElementById('editEmail').value = waiter.email;
     document.getElementById('editPassword').value = waiter.password;
 
-    // Asegúrate de ocultar la contraseña y restablecer el texto del botón
     const passwordField = document.getElementById('editPassword');
     const button = document.getElementById('showPasswordButton');
     passwordField.type = 'password';
@@ -80,48 +79,4 @@ function togglePasswordVisibility() {
         passwordField.type = "password"; // Oculta la contraseña
         button.textContent = "Ver Contraseña"; // Restaura el texto original del botón
     }
-}
-
-function uploadWaiters(event) {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-
-    reader.onload = function(e) {
-        try {
-            const waitersData = JSON.parse(e.target.result);
-
-            if (Array.isArray(waitersData)) {
-                waiters = waitersData;
-                loadWaiters();
-            } else {
-                alert("El archivo debe contener un array de camareros.");
-            }
-        } catch (error) {
-            alert("Hubo un error al procesar el archivo JSON.");
-        }
-    };
-
-    reader.readAsText(file);
-}
-
-function openLogoutModal() {
-    document.getElementById('logoutModal').style.display = 'block';
-}
-
-function closeLogoutModal() {
-    document.getElementById('logoutModal').style.display = 'none';
-}
-
-function logout() {
-    window.location.href = 'login.html'; 
-}
-
-window.onclick = function(event) {
-    if (event.target == document.getElementById('logoutModal')) {
-        closeLogoutModal();
-    }
-}
-
-function goToMainPage() {
-    window.location.href = "index.html"; // Redirige a la página principal
 }
