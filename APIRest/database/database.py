@@ -1,7 +1,7 @@
 import os
 import pymysql
 
-def obtener_conexion():
+def get_dbc():
     return pymysql.connect(host=os.environ.get('DB_HOST'),
                                 user=os.environ.get('DB_USERNAME'),
                                 password=os.environ.get('DB_PASSWORD'),
