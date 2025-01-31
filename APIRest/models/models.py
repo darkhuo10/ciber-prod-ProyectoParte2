@@ -1,29 +1,24 @@
-from flask_sqlalchemy import SQLAlchemy
+class BaseModel:
+    def to_json(self):
+        return self.__dict__
 
-db = SQLAlchemy()
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    idwaiter = db.Column(db.Integer, nullable=False)
-    username = db.Column(db.String(30), unique=True, nullable=False)
-    password = db.Column(db.String(100), nullable=False)
-
-    def __init__(self, idwaiter, username, password):
-        self.idwaiter = idwaiter
+class User(BaseModel):
+    def __init__(self, id: int, id_waiter: int, username: str, password: str, is_admin: bool = False):
+        self.id = id
+        self.id_waiter = id_waiter
         self.username = username
         self.password = password
+        self.is_admin = is_admin
+
+    def __repr__(self):
+        role = "Admin" if self.is_admin else "User"
+        return f"<User(id={self.id}, username={self.username}, role={role})>"
 
 
-class Waiter(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    identification = db.Column(db.String(9), unique=True, nullable=False)
-    firstname = db.Column(db.String(40), nullable=False)
-    lastname1 = db.Column(db.String(30), nullable=False)
-    lastname2 = db.Column(db.String(30), nullable=True)
-    phone = db.Column(db.String(9), nullable=True)
-    email = db.Column(db.String(50), nullable=True)
-
-    def __init__(self, identification, firstname, lastname1, lastname2=None, phone=None, email=None):
+class Waiter(BaseModel):
+    def __init__(self, id: int, identification: int, firstname: str, lastname1: str, lastname2: str, phone: str, email: str):
+        self.id = id
         self.identification = identification
         self.firstname = firstname
         self.lastname1 = lastname1
@@ -31,16 +26,19 @@ class Waiter(db.Model):
         self.phone = phone
         self.email = email
 
+    def __repr__(self):
+        return f"<Waiter(identification={self.identification}, name={self.firstname} {self.lastname1} {self.lastname2})>"
 
-class Product(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.String(255), nullable=True)
-    number = db.Column(db.Integer, nullable=False)
-    price = db.Column(db.Float, nullable=False)
 
-    def __init__(self, name, description=None, number=0, price=0.0):
+class Product(BaseModel):
+    def __init__(self, id: int, name: str, number: int, description: str, price: float, tax: float, image: str):
+        self.id = id
         self.name = name
         self.number = number
         self.description = description
         self.price = price
+        self.tax = tax
+        self.image = image
+
+    def __repr__(self):
+        return f"<Product(name={self.name}, number={self.number}, price={self.price:.2f}, iva={self.tax}%)>"
