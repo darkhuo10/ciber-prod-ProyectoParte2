@@ -1,27 +1,46 @@
-from flask import Blueprint, request, jsonify
-from controllers.waiter_controller import create_waiter, get_waiter, update_waiter, delete_waiter
+from flask import request, session
+import json
+import decimal
+from __main__ import app
+from controllers import waiter_controller
 
-waiter_bp = Blueprint('waiter_bp', __name__)
+class Encoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, decimal.Decimal): return float(obj)
 
-@waiter_bp.route('/waiter/create', methods=['POST'])
-def create_waiter_route():
-    return jsonify(create_waiter(request.json)), 201
+@app.route("/waiters",methods=["GET"])
+def get_all_waiters():
+    waiters,code= waiter_controller.get_all_waiters()
+    return json.dumps(waiters, cls = Encoder),code
 
-@waiter_bp.route('/waiters/<int:waiter_id>', methods=['GET'])
-def get_waiter_route(waiter_id):
-    waiter = get_waiter(waiter_id)
-    if waiter:
-        return jsonify(waiter)
-    return jsonify({"error": "Waiter not found"}), 404
+@app.route("/waiter/<id>",methods=["GET"])
+def get_waiter_by_id(id):
+    waiter,code = waiter_controller.get_waiter_by_id(id)
+    return json.dumps(waiter, cls = Encoder),code
 
-@waiter_bp.route('/waiters/<int:waiter_id>', methods=['PUT'])
-def update_waiter_route(waiter_id):
-    return jsonify(update_waiter(waiter_id, request.json))
+@app.route("/waiter/create",methods=["POST"])
+def create_waiter():
+    content_type = request.headers.get('Content-Type')
+    if (content_type == 'application/json'):
+        user_json = request.json
+        ret,code=waiter_controller.create_waiter(user_json) #Check if need to pass to object again
+    else:
+        ret={"status":"Bad request"}
+        code=401
+    return json.dumps(ret), code
 
-@waiter_bp.route('/waiters/<int:waiter_id>', methods=['DELETE'])
-def delete_waiter_route(waiter_id):
-    return jsonify(delete_waiter(waiter_id))
+@app.route("/user/delete/<id>", methods=["DELETE"])
+def delete_waiter(id):
+    ret,code=waiter_controller.delete_waiter(id)
+    return json.dumps(ret), code
 
-@waiter_bp.route('/test', methods=['GET'])
-def test():
-    return jsonify("Hello")
+@app.route("/user", methods=["PUT"])
+def update_waiter():
+    content_type = request.headers.get('Content-Type')
+    if (content_type == 'application/json'):
+        user_json = request.json
+        ret,code=waiter_controller.update_waiter(user_json)
+    else:
+        ret={"status":"Bad request"}
+        code=401
+    return json.dumps(ret), code
