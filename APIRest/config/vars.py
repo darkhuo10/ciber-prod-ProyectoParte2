@@ -1,5 +1,5 @@
 import os
-def cargarvariables():
+def load_vars():
     #os.environ['DB_USERNAME']='root'
     #os.environ['DB_PASSWORD']='example'
     #os.environ['DB_DATABASE']='PEPS'
