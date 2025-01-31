@@ -1,94 +1,103 @@
-from database.database import obtener_conexion
-import json
-from flask import request
-def create_waiter(data):
-    content_type = request.headers.get('Content-Type')
-    if content_type == 'application/json':
-        try:
-            conn = obtener_conexion()
-            cursor = conn.cursor()
-            query = "INSERT INTO waiter (identification, firstname, lastname1, lastname2, phone, email) VALUES (%s, %s, %s, %s, %s, %s)"
-            cursor.execute(query, (data['identification'], data['firstname'], data['lastname1'], data.get('lastname2'), data.get('phone'), data.get('email')))
-            conn.commit()
-            cursor.close()
-            conn.close()
-            ret = {"status": "OK", "message": "Waiter created successfully"}
-            code = 200
-        except Exception as e:
-            print(f"Exception while creating waiter: {e}")
-            ret = {"status": "ERROR"}
-            code = 500
-    else:
-        ret = {"status": "Bad request"}
-        code = 401
-    return json.dumps(ret), code
+from __future__ import print_function
+from database import database
+from models.models import Waiter
+import sys
 
-def get_waiter(waiter_id):
-    content_type = request.headers.get('Content-Type')
-    if content_type == 'application/json':
-        try:
-            conn = obtener_conexion()
-            cursor = conn.cursor()
-            query = "SELECT * FROM waiter WHERE id = %s"
-            cursor.execute(query, (waiter_id,))
-            waiter = cursor.fetchone()
-            cursor.close()
-            conn.close()
-            if waiter is None:
-                ret = {"status": "ERROR", "message": "Waiter not found"}
-                code = 404
+
+def create_waiter(waiter: Waiter):
+    try:
+        conexion = database.get_dbc()
+        with conexion.cursor() as cursor:
+            cursor.execute(
+                "INSERT INTO waiters(identification, firstname, lastname1, lastname2, phone, email) VALUES (%s, %s, %s, %s, %s, %s)",
+                (waiter.identification, waiter.firstname, waiter.lastname1, waiter.lastname2, waiter.phone,
+                 waiter.email))
+            if cursor.rowcount == 1:
+                ret = {"status": "OK"}
             else:
-                ret = {"status": "OK", "waiter": waiter}
-                code = 200
-        except Exception as e:
-            print(f"Exception while fetching waiter: {e}")
-            ret = {"status": "ERROR"}
-            code = 500
-    else:
-        ret = {"status": "Bad request"}
-        code = 401
-    return json.dumps(ret), code
+                ret = {"status": "Failure"}
+        code = 200
+        conexion.commit()
+        conexion.close()
+    except:
+        print("Error al crear el camarero", file=sys.stdout)
+        ret = {"status": "Failure"}
+        code = 500
+    return ret, code
 
-def update_waiter(waiter_id, data):
-    content_type = request.headers.get('Content-Type')
-    if content_type == 'application/json':
-        try:
-            conn = obtener_conexion()
-            cursor = conn.cursor()
-            query = "UPDATE waiter SET identification = %s, firstname = %s, lastname1 = %s, lastname2 = %s, phone = %s, email = %s WHERE id = %s"
-            cursor.execute(query, (data['identification'], data['firstname'], data['lastname1'], data.get('lastname2'), data.get('phone'), data.get('email'), waiter_id))
-            conn.commit()
-            cursor.close()
-            conn.close()
-            ret = {"status": "OK", "message": "Waiter updated successfully"}
-            code = 200
-        except Exception as e:
-            print(f"Exception while updating waiter: {e}")
-            ret = {"status": "ERROR"}
-            code = 500
-    else:
-        ret = {"status": "Bad request"}
-        code = 401
-    return json.dumps(ret), code
 
-def delete_waiter(waiter_id):
-    content_type = request.headers.get('Content-Type')
-    if content_type == 'application/json':
-        try:
-            conn = obtener_conexion()
-            cursor = conn.cursor()
-            query = "DELETE FROM waiter WHERE id = %s"
-            cursor.execute(query, (waiter_id,))
-            conn.commit()
-            cursor.close()
-            conn.close()
-            ret = {"status": "OK", "message": "Waiter deleted successfully"}
-            code = 200
-        except Exception as e:
-            print(f"Exception while deleting waiter: {e}")
-            ret = {"status": "ERROR"}
-            code = 500
-    else:
-        ret = {"status": "Bad request"}
-        code = 401
-    return json.dumps(ret), code
+def get_all_waiters():
+    try:
+        conexion = database.get_dbc()
+        with conexion.cursor() as cursor:
+            cursor.execute("SELECT * FROM waiters")
+            waiters = cursor.fetchall()
+            waiters_json = []
+            if waiters:
+                for w in waiters:
+                    waiters_json.append(w.to_json())
+        conexion.close()
+        code = 200
+    except:
+        print("Error al obtener los camareros", file=sys.stdout)
+        waiters_json = []
+        code = 500
+    return waiters_json, code
+
+
+def get_waiter_by_id(id: int):
+    waiter_json = {}
+    try:
+        conexion = database.get_dbc()
+        with conexion.cursor() as cursor:
+            cursor.execute("SELECT * FROM waiters WHERE id = %s", (id))
+            waiter = cursor.fetchone()
+            if waiter is not None:
+                waiter_json = waiter.to_json()  # may not work
+        conexion.close()
+        code = 200
+    except:
+        print("Error al recuperar el camarero", file=sys.stdout)
+        code = 500
+    return waiter_json, code
+
+
+def delete_waiter(id: int):
+    try:
+        conexion = database.get_dbc()
+        with conexion.cursor() as cursor:
+            cursor.execute("DELETE FROM waiters WHERE id = %s", (id))
+            if cursor.rowcount == 1:
+                ret = {"status": "OK"}
+            else:
+                ret = {"status": "Failure"}
+        conexion.commit()
+        conexion.close()
+        code = 200
+    except:
+        print("Error al eliminar el producto", file=sys.stdout)
+        ret = {"status": "Failure"}
+        code = 500
+    return ret, code
+
+
+def update_waiter(waiter: Waiter):
+    try:
+        conexion = database.get_dbc()
+        with conexion.cursor() as cursor:
+            cursor.execute(
+                # (identification, firstname, lastname1, lastname2, phone, email) VALUES (%s, %s, %s, %s, %s, %s)",
+                "UPDATE waiters SET identification = %s, firstname = %s, lastname1 = %s, lastname2=%s, phone=%s, email=%s WHERE id = %s",
+                (waiter.identification, waiter.firstname, waiter.lastname1, waiter.lastname2, waiter.phone, waiter.email, waiter.id))
+            if cursor.rowcount == 1:
+                ret = {"status": "OK"}
+            else:
+                ret = {"status": "Failure"}
+        conexion.commit()
+        conexion.close()
+        code = 200
+    except:
+        print("Error al actualizar el camareros", file=sys.stdout)
+        ret = {"status": "Failure"}
+        code = 500
+    return ret, code

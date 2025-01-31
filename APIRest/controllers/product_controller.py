@@ -1,94 +1,95 @@
-from database.database import obtener_conexion
-import json
+from __future__ import print_function
+from database import database
+from models.models import Product
+import sys
 
-def create_product(data):
-    content_type = request.headers.get('Content-Type')
-    if content_type == 'application/json':
-        try:
-            conn = obtener_conexion()
-            cursor = conn.cursor()
-            query = "INSERT INTO product (name, description, number, price) VALUES (%s, %s, %s, %s)"
-            cursor.execute(query, (data['name'], data.get('description'), data['number'], data['price']))
-            conn.commit()
-            cursor.close()
-            conn.close()
-            ret = {"status": "OK", "message": "Product created successfully"}
-            code = 200
-        except Exception as e:
-            print(f"Exception while creating product: {e}")
-            ret = {"status": "ERROR"}
-            code = 500
-    else:
-        ret = {"status": "Bad request"}
-        code = 401
-    return json.dumps(ret), code
-
-def get_product(product_id):
-    content_type = request.headers.get('Content-Type')
-    if content_type == 'application/json':
-        try:
-            conn = obtener_conexion()
-            cursor = conn.cursor()
-            query = "SELECT * FROM product WHERE id = %s"
-            cursor.execute(query, (product_id,))
-            product = cursor.fetchone()
-            cursor.close()
-            conn.close()
-            if product is None:
-                ret = {"status": "ERROR", "message": "Product not found"}
-                code = 404
+def create_product(product : Product):
+    try:
+        conexion = database.get_dbc()
+        with conexion.cursor() as cursor:
+            cursor.execute("INSERT INTO products(name, description, number, price, tax, image) VALUES (%s, %s, %s, %s, %s, %s)",
+                       (product.name, product.description, product.number, product.price, product.tax, product.image))
+            if cursor.rowcount == 1:
+                ret={"status": "OK" }
             else:
-                ret = {"status": "OK", "product": product}
-                code = 200
-        except Exception as e:
-            print(f"Exception while fetching product: {e}")
-            ret = {"status": "ERROR"}
-            code = 500
-    else:
-        ret = {"status": "Bad request"}
-        code = 401
-    return json.dumps(ret), code
+                ret = {"status": "Failure" }
+        code=200
+        conexion.commit()
+        conexion.close()
+    except:
+        print("Error al crear el producto", file=sys.stdout)
+        ret = {"status": "Failure" }
+        code=500
+    return ret,code
 
-def update_product(product_id, data):
-    content_type = request.headers.get('Content-Type')
-    if content_type == 'application/json':
-        try:
-            conn = obtener_conexion()
-            cursor = conn.cursor()
-            query = "UPDATE product SET name = %s, description = %s, number = %s, price = %s WHERE id = %s"
-            cursor.execute(query, (data['name'], data.get('description'), data['number'], data['price'], product_id))
-            conn.commit()
-            cursor.close()
-            conn.close()
-            ret = {"status": "OK", "message": "Product updated successfully"}
-            code = 200
-        except Exception as e:
-            print(f"Exception while updating product: {e}")
-            ret = {"status": "ERROR"}
-            code = 500
-    else:
-        ret = {"status": "Bad request"}
-        code = 401
-    return json.dumps(ret), code
+def get_all_products():
+    try:
+        conexion = database.get_dbc()
+        with conexion.cursor() as cursor:
+            cursor.execute("SELECT * FROM products")
+            products = cursor.fetchall()
+            products_json=[]
+            if products:
+                for p in products:
+                    products_json.append(p.to_json())
+        conexion.close()
+        code=200
+    except:
+        print("Error al obtener los productos", file=sys.stdout)
+        products_json=[]
+        code=500
+    return products_json, code
 
-def delete_product(product_id):
-    content_type = request.headers.get('Content-Type')
-    if content_type == 'application/json':
-        try:
-            conn = obtener_conexion()
-            cursor = conn.cursor()
-            query = "DELETE FROM product WHERE id = %s"
-            cursor.execute(query, (product_id,))
-            conn.commit()
-            cursor.close()
-            conn.close()
-            ret = {"status": "OK", "message": "Product deleted successfully"}
-            code = 200
-        except Exception as e:
-            print(f"Exception while deleting product: {e}")
-            ret = {"status": "ERROR"}
-            code = 500
-    else:
-        ret = {"status": "Bad request"}
-        code = 401
-    return json.dumps(ret), code
+def get_product_by_id(id: int):
+    product_json = {}
+    try:
+        conexion = database.get_dbc()
+        with conexion.cursor() as cursor:
+            cursor.execute("SELECT * FROM products WHERE id = %s", (id))
+            product = cursor.fetchone()
+            if product is not None:
+                product_json = product.to_json() # may not work
+        conexion.close()
+        code=200
+    except:
+        print("Error al recuperar el producto", file=sys.stdout)
+        code=500
+    return product_json, code
+
+
+def delete_product(id: int):
+    try:
+        conexion = database.get_dbc()
+        with conexion.cursor() as cursor:
+            cursor.execute("DELETE FROM products WHERE id = %s", (id))
+            if cursor.rowcount == 1:
+                ret={"status": "OK" }
+            else:
+                ret={"status": "Failure" }
+        conexion.commit()
+        conexion.close()
+        code=200
+    except:
+        print("Error al eliminar el producto", file=sys.stdout)
+        ret = {"status": "Failure" }
+        code=500
+    return ret,code
+
+def update_product(product: Product):
+    try:
+        conexion = database.get_dbc()
+        with conexion.cursor() as cursor:
+            cursor.execute("UPDATE products SET name = %s, description = %s, number = %s, price=%s, tax= %s, image=%s WHERE id = %s",
+                       (product.name, product.description, product.number, product.price, product.tax, product.image, product.id))
+            if cursor.rowcount == 1:
+                ret={"status": "OK" }
+            else:
+                ret={"status": "Failure" }
+        conexion.commit()
+        conexion.close()
+        code=200
+    except:
+        print("Error al actualizar el producto", file=sys.stdout)
+        ret = {"status": "Failure" }
+        code=500
+    return ret,code
