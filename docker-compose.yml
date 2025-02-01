@@ -1,0 +1,50 @@
+version: '3.9'
+
+services:
+  apache:
+    build:
+      context: ./apache
+    ports:
+      - "7777:80"
+    volumes:
+      - ./frontend:/usr/local/apache2/htdocs/
+    depends_on:
+      - python
+
+  python:
+    build:
+      context: .
+      dockerfile: app/Dockerfile
+    expose:
+      - "8080"   # Expose the port internally, but don't map it to the host
+    environment:
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+      - DB_NAME=restaurant
+      - DB_USER=root
+      - DB_PASSWORD=secret
+    depends_on:
+      - mariadb
+
+  mariadb:
+    image: mariadb:latest
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=secret
+      - MYSQL_DATABASE=restaurant
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=admin123
+    volumes:
+      - ./APIRest/database:/docker-entrypoint-initdb.d
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    restart: always
+    ports:
+      - "8081:80"
+    environment:
+      - PMA_HOST=mariadb
+      - MYSQL_ROOT_PASSWORD=secret
+    depends_on:
+      - mariadb
+
