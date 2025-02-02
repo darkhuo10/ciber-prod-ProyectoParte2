@@ -16,7 +16,7 @@ services:
     build: 
       context: .
       dockerfile: app/Dockerfile
-    expose:
+    ports:
       - "8080:8080"
     environment:
       - DB_HOST=mariadb

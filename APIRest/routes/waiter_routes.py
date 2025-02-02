@@ -4,6 +4,9 @@ import decimal
 from __main__ import app
 from controllers import waiter_controller
 
+from models.models import Waiter
+
+
 class Encoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, decimal.Decimal): return float(obj)
@@ -22,19 +25,26 @@ def get_waiter_by_id(id):
 def create_waiter():
     content_type = request.headers.get('Content-Type')
     if (content_type == 'application/json'):
-        user_json = request.json
-        ret,code=waiter_controller.create_waiter(user_json) #Check if need to pass to object again
+        waiter_json = request.json
+        waiter =  Waiter(
+            waiter_json.get('identification'),
+            waiter_json.get('firstname'),
+            waiter_json.get('lastname1'),
+            waiter_json.get('lastname2'),
+            waiter_json.get('phone'),
+            waiter_json.get('email'))
+        ret,code=waiter_controller.create_waiter(waiter)
     else:
         ret={"status":"Bad request"}
         code=401
     return json.dumps(ret), code
 
-@app.route("/user/delete/<id>", methods=["DELETE"])
+@app.route("/waiter/delete/<id>", methods=["DELETE"])
 def delete_waiter(id):
     ret,code=waiter_controller.delete_waiter(id)
     return json.dumps(ret), code
 
-@app.route("/user", methods=["PUT"])
+@app.route("/waiter/update", methods=["PUT"])
 def update_waiter():
     content_type = request.headers.get('Content-Type')
     if (content_type == 'application/json'):

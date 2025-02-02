@@ -35,7 +35,8 @@ def get_all_waiters():
             waiters_json = []
             if waiters:
                 for w in waiters:
-                    waiters_json.append(w.to_json())
+                    print(w.__repr__)
+                    waiters_json.append(waiter_to_json(w))
         conexion.close()
         code = 200
     except:
@@ -45,15 +46,26 @@ def get_all_waiters():
     return waiters_json, code
 
 
+def waiter_to_json(row):
+        # Assuming the row is a tuple (id, identification, firstname, lastname1, lastname2, phone, email)
+        return {
+            "id": row[0],
+            "identification": row[1],
+            "firstname": row[2],
+            "lastname1": row[3],
+            "lastname2": row[4],
+            "phone": row[5],
+            "email": row[6]
+        }
 def get_waiter_by_id(id: int):
     waiter_json = {}
     try:
         conexion = database.get_dbc()
         with conexion.cursor() as cursor:
-            cursor.execute("SELECT * FROM waiters WHERE id = %s", (id))
+            cursor.execute("SELECT * FROM waiters WHERE id = %s", id)
             waiter = cursor.fetchone()
             if waiter is not None:
-                waiter_json = waiter.to_json()  # may not work
+                waiter_json = waiter_to_json(waiter)
         conexion.close()
         code = 200
     except:

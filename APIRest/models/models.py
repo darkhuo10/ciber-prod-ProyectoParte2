@@ -17,8 +17,7 @@ class User(BaseModel):
 
 
 class Waiter(BaseModel):
-    def __init__(self, id: int, identification: int, firstname: str, lastname1: str, lastname2: str, phone: str, email: str):
-        self.id = id
+    def __init__(self, identification: int, firstname: str, lastname1: str, lastname2: str, phone: str, email: str):
         self.identification = identification
         self.firstname = firstname
         self.lastname1 = lastname1
