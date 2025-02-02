@@ -1,11 +1,5 @@
-class BaseModel:
-    def to_json(self):
-        return self.__dict__
-
-
-class User(BaseModel):
-    def __init__(self, id: int, id_waiter: int, username: str, password: str, is_admin: bool = False):
-        self.id = id
+class User():
+    def __init__(self, id_waiter: int, username: str, password: str, is_admin: bool = False):
         self.id_waiter = id_waiter
         self.username = username
         self.password = password
@@ -16,7 +10,7 @@ class User(BaseModel):
         return f"<User(id={self.id}, username={self.username}, role={role})>"
 
 
-class Waiter(BaseModel):
+class Waiter():
     def __init__(self, identification: int, firstname: str, lastname1: str, lastname2: str, phone: str, email: str):
         self.identification = identification
         self.firstname = firstname
@@ -29,9 +23,8 @@ class Waiter(BaseModel):
         return f"<Waiter(identification={self.identification}, name={self.firstname} {self.lastname1} {self.lastname2})>"
 
 
-class Product(BaseModel):
-    def __init__(self, id: int, name: str, number: int, description: str, price: float, tax: float, image: str):
-        self.id = id
+class Product():
+    def __init__(self, name: str, number: int, description: str, price: float, tax: float, image: str):
         self.name = name
         self.number = number
         self.description = description
