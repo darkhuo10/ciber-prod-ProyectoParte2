@@ -3,6 +3,18 @@ from database import database
 from models.models import Product
 import sys
 
+def product_to_json(row):
+    #name: str, number: int, description: str, price: float, tax: float, image: str
+    return {
+        "id": row[0],
+        "name": row[1],
+        "number": row[2],
+        "description": row[3],
+        "price": row[4],
+        "tax": row[5],
+        "image": row[6],
+    }
+
 def create_product(product : Product):
     try:
         conexion = database.get_dbc()
@@ -31,7 +43,7 @@ def get_all_products():
             products_json=[]
             if products:
                 for p in products:
-                    products_json.append(p.to_json())
+                    products_json.append(product_to_json(p))
         conexion.close()
         code=200
     except:
@@ -48,7 +60,7 @@ def get_product_by_id(id: int):
             cursor.execute("SELECT * FROM products WHERE id = %s", (id))
             product = cursor.fetchone()
             if product is not None:
-                product_json = product.to_json() # may not work
+                product_json = product_json(product)
         conexion.close()
         code=200
     except:

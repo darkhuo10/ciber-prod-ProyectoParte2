@@ -3,6 +3,16 @@ from database import database
 from models.models import Waiter
 import sys
 
+def waiter_to_json(row):
+    return {
+        "id": row[0],
+        "identification": row[1],
+        "firstname": row[2],
+        "lastname1": row[3],
+        "lastname2": row[4],
+        "phone": row[5],
+        "email": row[6]
+    }
 
 def create_waiter(waiter: Waiter):
     try:
@@ -46,17 +56,7 @@ def get_all_waiters():
     return waiters_json, code
 
 
-def waiter_to_json(row):
-        # Assuming the row is a tuple (id, identification, firstname, lastname1, lastname2, phone, email)
-        return {
-            "id": row[0],
-            "identification": row[1],
-            "firstname": row[2],
-            "lastname1": row[3],
-            "lastname2": row[4],
-            "phone": row[5],
-            "email": row[6]
-        }
+
 def get_waiter_by_id(id: int):
     waiter_json = {}
     try:
