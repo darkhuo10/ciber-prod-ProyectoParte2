@@ -3,10 +3,21 @@ import json
 import decimal
 from __main__ import app
 from controllers import product_controller
+from models.models import Product
 
 class Encoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, decimal.Decimal): return float(obj)
+
+def json_to_product(product_json):
+    product = Product(
+        product_json.get('name'),
+        product_json.get('number'),
+        product_json.get('description'),
+        product_json.get('price'),
+        product_json.get('tax'),
+        product_json.get('image'))
+    return product
 
 @app.route("/products",methods=["GET"])
 def get_all_products():
@@ -23,7 +34,7 @@ def create_product():
     content_type = request.headers.get('Content-Type')
     if (content_type == 'application/json'):
         product_json = request.json
-        ret,code=product_controller.create_product(product_json) #Check if need to pass to object again
+        ret,code=product_controller.create_product(json_to_product(product_json)) #Check if need to pass to object again
     else:
         ret={"status":"Bad request"}
         code=401
@@ -39,7 +50,7 @@ def update_product():
     content_type = request.headers.get('Content-Type')
     if (content_type == 'application/json'):
         product_json = request.json
-        ret,code=product_controller.update_product(product_json)
+        ret,code=product_controller.update_product(json_to_product(product_json))
     else:
         ret={"status":"Bad request"}
         code=401

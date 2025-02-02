@@ -11,6 +11,16 @@ class Encoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, decimal.Decimal): return float(obj)
 
+def json_to_waiter(waiter_json):
+    waiter =  Waiter(
+            waiter_json.get('identification'),
+            waiter_json.get('firstname'),
+            waiter_json.get('lastname1'),
+            waiter_json.get('lastname2'),
+            waiter_json.get('phone'),
+            waiter_json.get('email'))
+    return waiter
+
 @app.route("/waiters",methods=["GET"])
 def get_all_waiters():
     waiters,code= waiter_controller.get_all_waiters()
@@ -26,14 +36,7 @@ def create_waiter():
     content_type = request.headers.get('Content-Type')
     if (content_type == 'application/json'):
         waiter_json = request.json
-        waiter =  Waiter(
-            waiter_json.get('identification'),
-            waiter_json.get('firstname'),
-            waiter_json.get('lastname1'),
-            waiter_json.get('lastname2'),
-            waiter_json.get('phone'),
-            waiter_json.get('email'))
-        ret,code=waiter_controller.create_waiter(waiter)
+        ret,code=waiter_controller.create_waiter(json_to_waiter(waiter_json))
     else:
         ret={"status":"Bad request"}
         code=401
@@ -48,8 +51,8 @@ def delete_waiter(id):
 def update_waiter():
     content_type = request.headers.get('Content-Type')
     if (content_type == 'application/json'):
-        user_json = request.json
-        ret,code=waiter_controller.update_waiter(user_json)
+        waiter_json = request.json
+        ret,code=waiter_controller.update_waiter(json_to_waiter(waiter_json))
     else:
         ret={"status":"Bad request"}
         code=401

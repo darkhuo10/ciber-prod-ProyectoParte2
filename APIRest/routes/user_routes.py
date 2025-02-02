@@ -3,10 +3,21 @@ import json
 import decimal
 from __main__ import app
 from controllers import user_controller
+from models.models import User
+
 
 class Encoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, decimal.Decimal): return float(obj)
+
+
+def json_to_user(user_json):
+    user = User(
+        user_json.get('id_waiter'),
+        user_json.get('username'),
+        user_json.get('password'),
+        user_json.get('is_admin'))
+    return user
 
 @app.route("/users",methods=["GET"])
 def get_all_users():
@@ -23,7 +34,7 @@ def create_user():
     content_type = request.headers.get('Content-Type')
     if (content_type == 'application/json'):
         user_json = request.json
-        ret,code=user_controller.create_user(user_json) #Check if need to pass to object again
+        ret,code=user_controller.create_user(json_to_user(user_json))
     else:
         ret={"status":"Bad request"}
         code=401
@@ -39,7 +50,7 @@ def update_user():
     content_type = request.headers.get('Content-Type')
     if (content_type == 'application/json'):
         user_json = request.json
-        ret,code=user_controller.update_user(user_json)
+        ret,code=user_controller.create_user(json_to_user(user_json))
     else:
         ret={"status":"Bad request"}
         code=401
@@ -47,7 +58,46 @@ def update_user():
 
 # routes for /me, /login, /register
 '''
+Check with postman
 @app.route("/me",methods=["GET"])
 @app.route("/login",methods=["POST"])
 @app.route("/register",methods=["POST"])'''
 
+@app.route("/me", methods=["GET"])
+def get_me():
+    user_id = session.get("user_id")
+    user, code = user_controller.get_user_by_id(int(user_id))
+    return json.dumps(user, cls=Encoder), code
+
+@app.route("/login", methods=["POST"])
+def login():
+    content_type = request.headers.get("Content-Type")
+    if content_type == "application/json":
+        user_json = request.json
+        username = user_json.get("username")
+        password = user_json.get("password")
+        
+        ret, code = user_controller.login_user(username, password)
+        
+        if ret.get("status") == "OK":
+            session["user_id"] = ret["user"]["id"]
+        
+    else:
+        ret = {"status": "Bad request"}
+        code = 401
+    
+    return json.dumps(ret), code
+
+@app.route("/register", methods=["POST"])
+def register():
+    content_type = request.headers.get("Content-Type")
+    if content_type == "application/json":
+        user_json = request.json
+        id_waiter = user_json.get("id_waiter")
+        username = user_json.get("username")
+        password = user_json.get("password")
+        ret, code = user_controller.register_user(id_waiter, username, password)
+    else:
+        ret = {"status": "Bad request"}
+        code = 401
+    return json.dumps(ret), code
