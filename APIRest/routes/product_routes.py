@@ -1,23 +1,57 @@
-from flask import Blueprint, request, jsonify
-from controllers.product_controller import create_product, get_product, update_product, delete_product
+from flask import request, session
+import json
+import decimal
+from __main__ import app
+from controllers import product_controller
+from models.models import Product
 
-product_bp = Blueprint('product_bp', __name__)
+class Encoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, decimal.Decimal): return float(obj)
 
-@product_bp.route('/products', methods=['POST'])
-def create_product_route():
-    return jsonify(create_product(request.json)), 201
+def json_to_product(product_json):
+    product = Product(
+        product_json.get('name'),
+        product_json.get('number'),
+        product_json.get('description'),
+        product_json.get('price'),
+        product_json.get('tax'),
+        product_json.get('image'))
+    return product
 
-@product_bp.route('/products/<int:product_id>', methods=['GET'])
-def get_product_route(product_id):
-    product = get_product(product_id)
-    if product:
-        return jsonify(product)
-    return jsonify({"error": "Product not found"}), 404
+@app.route("/products",methods=["GET"])
+def get_all_products():
+    products,code= product_controller.get_all_products()
+    return json.dumps(products, cls = Encoder),code
 
-@product_bp.route('/products/<int:product_id>', methods=['PUT'])
-def update_product_route(product_id):
-    return jsonify(update_product(product_id, request.json))
+@app.route("/product/<id>",methods=["GET"])
+def get_product_by_id(id):
+    product,code = product_controller.get_product_by_id(id)
+    return json.dumps(product, cls = Encoder),code
 
-@product_bp.route('/products/<int:product_id>', methods=['DELETE'])
-def delete_product_route(product_id):
-    return jsonify(delete_product(product_id))
+@app.route("/product/create",methods=["POST"])
+def create_product():
+    content_type = request.headers.get('Content-Type')
+    if (content_type == 'application/json'):
+        product_json = request.json
+        ret,code=product_controller.create_product(json_to_product(product_json)) #Check if need to pass to object again
+    else:
+        ret={"status":"Bad request"}
+        code=401
+    return json.dumps(ret), code
+
+@app.route("/product/delete/<id>", methods=["DELETE"])
+def delete_product(id):
+    ret,code=product_controller.delete_product(id)
+    return json.dumps(ret), code
+
+@app.route("/product", methods=["PUT"])
+def update_product():
+    content_type = request.headers.get('Content-Type')
+    if (content_type == 'application/json'):
+        product_json = request.json
+        ret,code=product_controller.update_product(json_to_product(product_json))
+    else:
+        ret={"status":"Bad request"}
+        code=401
+    return json.dumps(ret), code

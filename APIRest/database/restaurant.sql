@@ -1,32 +1,38 @@
 -- Crear base de datos
-CREATE DATABASE Restaurant;
-USE Restaurant;
+DROP DATABASE IF EXISTS restaurant;
+CREATE DATABASE restaurant;
+USE restaurant;
 
 -- Tabla CAMAREROS
-CREATE TABLE Waiters (
+CREATE TABLE waiters (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    identification VARCHAR(9) UNIQUE NOT NULL,
+    identification CHAR(9) UNIQUE NOT NULL,
     firstname VARCHAR(40) NOT NULL,
     lastname1 VARCHAR(30) NOT NULL,
-    lastname2 VARCHAR(30),
-    phone VARCHAR(9),
-    email VARCHAR(50)
+    lastname2 VARCHAR(30) NULL,
+    phone VARCHAR(15),
+    email VARCHAR(50) UNIQUE
 );
 
--- Tabla CLIENTES(USUARIOS)
-CREATE TABLE Users (
+-- Tabla USUARIOS
+CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    idwaiter INT NOT NULL,
+    id_waiter INT NOT NULL,
     username VARCHAR(30) UNIQUE NOT NULL,
+    is_admin BOOLEAN DEFAULT FALSE,
     password VARCHAR(100) NOT NULL,
-    FOREIGN KEY (idwaiter) REFERENCES Waiter(id) ON DELETE CASCADE
+    FOREIGN KEY (id_waiter) REFERENCES waiters(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
 );
 
 -- Tabla PRODUCTOS
-CREATE TABLE Products (
+CREATE TABLE products (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     description VARCHAR(255),
-    number INT NOT NULL,
-    price FLOAT NOT NULL
+    number INT NOT NULL UNIQUE,
+    price DECIMAL(10,2) NOT NULL,
+    tax DECIMAL(5,2) NOT NULL,
+    image VARCHAR(255)
 );

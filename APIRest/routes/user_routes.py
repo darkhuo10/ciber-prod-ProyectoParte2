@@ -1,96 +1,103 @@
-from flask import Flask, request, session, json
+from flask import request, session
+import json
+import decimal
+from __main__ import app
+from controllers import user_controller
+from models.models import User
 
-app = Flask(__name__)
-app.secret_key = 'clave_secreta'  # Necesario para usar sesiones
 
-def obtener_conexion():
-    # Implementar la lógica de conexión a la base de datos aquí
-    pass
+class Encoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, decimal.Decimal): return float(obj)
 
-@app.route("/login", methods=['POST'])
+
+def json_to_user(user_json):
+    user = User(
+        user_json.get('id_waiter'),
+        user_json.get('username'),
+        user_json.get('password'),
+        user_json.get('is_admin'))
+    return user
+
+@app.route("/users",methods=["GET"])
+def get_all_users():
+    users,code= user_controller.get_all_users()
+    return json.dumps(users, cls = Encoder),code
+
+@app.route("/user/<id>",methods=["GET"])
+def get_user_by_id(id):
+    user,code = user_controller.get_user_by_id(id)
+    return json.dumps(user, cls = Encoder),code
+
+@app.route("/user/create",methods=["POST"])
+def create_user():
+    content_type = request.headers.get('Content-Type')
+    if (content_type == 'application/json'):
+        user_json = request.json
+        ret,code=user_controller.create_user(json_to_user(user_json))
+    else:
+        ret={"status":"Bad request"}
+        code=401
+    return json.dumps(ret), code
+
+@app.route("/user/delete/<id>", methods=["DELETE"])
+def delete_user(id):
+    ret,code=user_controller.delete_user(id)
+    return json.dumps(ret), code
+
+@app.route("/user", methods=["PUT"])
+def update_user():
+    content_type = request.headers.get('Content-Type')
+    if (content_type == 'application/json'):
+        user_json = request.json
+        ret,code=user_controller.create_user(json_to_user(user_json))
+    else:
+        ret={"status":"Bad request"}
+        code=401
+    return json.dumps(ret), code
+
+# routes for /me, /login, /register
+'''
+Check with postman
+@app.route("/me",methods=["GET"])
+@app.route("/login",methods=["POST"])
+@app.route("/register",methods=["POST"])'''
+
+@app.route("/me", methods=["GET"])
+def get_me():
+    user_id = session.get("user_id")
+    user, code = user_controller.get_user_by_id(int(user_id))
+    return json.dumps(user, cls=Encoder), code
+
+@app.route("/login", methods=["POST"])
 def login():
-    content_type = request.headers.get('Content-Type')
-    if content_type == 'application/json':
-        usuario_json = request.json
-        username = usuario_json['username']
-        password = usuario_json['password']
-        try:
-            conexion = obtener_conexion()
-            with conexion.cursor() as cursor:
-                cursor.execute("SELECT id, idwaiter, username FROM Users WHERE username = %s and password = %s", (username, password))
-                usuario = cursor.fetchone()
-            conexion.close()
-            if usuario is None:
-                ret = {"status": "ERROR", "mensaje": "Usuario/clave erroneo"}
-            else:
-                session["usuario"] = {
-                    "id": usuario[0],
-                    "idwaiter": usuario[1],
-                    "username": usuario[2]
-                }
-                ret = {"status": "OK"}
-            code = 200
-        except:
-            print("Excepcion al validar al usuario")
-            ret = {"status": "ERROR"}
-            code = 500
+    content_type = request.headers.get("Content-Type")
+    if content_type == "application/json":
+        user_json = request.json
+        username = user_json.get("username")
+        password = user_json.get("password")
+        
+        ret, code = user_controller.login_user(username, password)
+        
+        if ret.get("status") == "OK":
+            session["user_id"] = ret["user"]["id"]
+        
+    else:
+        ret = {"status": "Bad request"}
+        code = 401
+    
+    return json.dumps(ret), code
+
+@app.route("/register", methods=["POST"])
+def register():
+    content_type = request.headers.get("Content-Type")
+    if content_type == "application/json":
+        user_json = request.json
+        id_waiter = user_json.get("id_waiter")
+        username = user_json.get("username")
+        password = user_json.get("password")
+        ret, code = user_controller.register_user(id_waiter, username, password)
     else:
         ret = {"status": "Bad request"}
         code = 401
     return json.dumps(ret), code
-
-@app.route("/register", methods=['POST'])
-def registro():
-    content_type = request.headers.get('Content-Type')
-    if content_type == 'application/json':
-        usuario_json = request.json
-        idwaiter = usuario_json['idwaiter']
-        username = usuario_json['username']
-        password = usuario_json['password']
-        try:
-            conexion = obtener_conexion()
-            with conexion.cursor() as cursor:
-                cursor.execute("SELECT id FROM Users WHERE username = %s", (username,))
-                usuario = cursor.fetchone()
-                if usuario is None:
-                    cursor.execute("INSERT INTO Users (idwaiter, username, password) VALUES (%s, %s, %s)", (idwaiter, username, password))
-                    if cursor.rowcount == 1:
-                        conexion.commit()
-                        ret = {"status": "OK"}
-                        code = 200
-                    else:
-                        ret = {"status": "ERROR"}
-                        code = 500
-                else:
-                    ret = {"status": "ERROR", "mensaje": "Usuario ya existe"}
-                    code = 200
-            conexion.close()
-        except:
-            print("Excepcion al registrar al usuario")
-            ret = {"status": "ERROR"}
-            code = 500
-    else:
-        ret = {"status": "Bad request"}
-        code = 401
-    return json.dumps(ret), code
-
-@app.route("/me", methods=['GET'])
-def me():
-    if "usuario" in session:
-        ret = {
-            "status": "OK",
-            "usuario": session["usuario"]
-        }
-        code = 200
-    else:
-        ret = {"status": "ERROR", "mensaje": "No hay usuario logueado"}
-        code = 401
-    return json.dumps(ret), code
-
-@app.route("/logout", methods=['GET'])
-def logout():
-    session.clear()
-    return json.dumps({"status": "OK"}), 200
-
-if __name__ == "__main__":
-    app.run()
