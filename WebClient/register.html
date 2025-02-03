@@ -7,37 +7,12 @@
     <title>Registro</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
     <script>
-        // Función para cargar la lista de camareros en el select
-        onload = function() {
-            obtenerCamareros();
-        }
-
-        function obtenerCamareros() {
-            fetch("http://localhost:8080/waiters")
-                .then(response => response.json())
-                .then(camareros => {
-                    let selectCamarero = document.getElementById("waiterSelect");
-                    camareros.forEach(camarero => {
-                        let option = document.createElement("option");
-                        option.value = camarero.id;
-                        option.textContent = `${camarero.firstname} ${camarero.lastname1} ${camarero.lastname2}`;
-                        selectCamarero.appendChild(option);
-                    });
-                })
-                .catch(error => {
-                    console.error("Error al cargar los camareros:", error);
-                    alert("Hubo un problema al cargar los camareros. Intenta nuevamente.");
-                });
-        }
-
         // Función para procesar el formulario de registro
         function registrarUsuario() {
-            let waiterId = document.getElementById("waiterSelect").value;
             let username = document.getElementById("username").value;
             let password = document.getElementById("password").value;
 
             let data = {
-                id_waiter: waiterId,
                 username: username,
                 password: password
             };
@@ -86,4 +61,17 @@
                 <div class="field">
                     <label class="label">Contraseña</label>
                     <div class="control">
-                        <input clas
+                        <input class="input" type="password" id="password" placeholder="Contraseña" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="control">
+                        <button class="button is-primary" type="submit">Registrar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</body>
+</html>
