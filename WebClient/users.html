@@ -1,0 +1,80 @@
+<!-- users.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuarios</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
+    <script>
+        onload = function() {
+            fetchUsers();
+        }
+
+        function fetchUsers() {
+            fetch("/users")
+                .then(response => response.json())
+                .then(users => {
+                    let tbody = document.getElementById("users");
+                    tbody.innerHTML = "";
+                    users.forEach(user => {
+                        tbody.innerHTML += `
+                            <tr>
+                                <td>${user.id_waiter}</td>
+                                <td>${user.username}</td>
+                                <td>${user.is_admin ? 'Sí' : 'No'}</td>
+                                <td>
+                                    <a href="edit_user.html?id=${user.id_waiter}" class="button is-info">Editar</a>
+                                    <button class="button is-danger" onclick="deleteUser(${user.id_waiter})">Eliminar</button>
+                                </td>
+                            </tr>`;
+                    });
+                })
+                .catch(error => console.error("Error al cargar usuarios", error));
+        }
+
+        function deleteUser(id) {
+            if (confirm("¿Estás seguro de que deseas eliminar este usuario?")) {
+                fetch(`/user/delete/${id}`, { method: "DELETE" })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.status === "OK") {
+                            alert("Usuario eliminado correctamente");
+                            fetchUsers();
+                        } else {
+                            alert("Error al eliminar el usuario");
+                        }
+                    })
+                    .catch(error => console.error("Error al eliminar usuario", error));
+            }
+        }
+    </script>
+</head>
+<body>
+    <nav class="navbar is-warning">
+        <a href="index.html" class="navbar-item">Inicio</a>
+        <a href="waiters.html" class="navbar-item">Camareros</a>
+        <a href="products.html" class="navbar-item">Productos</a>
+        <a href="users.html" class="navbar-item">Usuarios</a>
+        <a href="javascript:logout()" class="navbar-item">Cerrar sesión</a>
+    </nav>
+
+    <section class="section">
+        <div class="container">
+            <h1 class="is-size-3">Lista de Usuarios</h1>
+            <a href="add_user.html" class="button is-success">Agregar Usuario</a>
+            <table class="table is-striped is-fullwidth">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre de Usuario</th>
+                        <th>Administrador</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="users"></tbody>
+            </table>
+        </div>
+    </section>
+</body>
+</html>

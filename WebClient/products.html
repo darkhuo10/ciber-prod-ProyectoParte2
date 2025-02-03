@@ -1,0 +1,85 @@
+<!-- products.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
+    <script>
+        onload = function() {
+            fetchProducts();
+        }
+
+        function fetchProducts() {
+            fetch("/products")
+                .then(response => response.json())
+                .then(products => {
+                    let tbody = document.getElementById("products");
+                    tbody.innerHTML = "";
+                    products.forEach(product => {
+                        tbody.innerHTML += `
+                            <tr>
+                                <td>${product.name}</td>
+                                <td>${product.number}</td>
+                                <td>${product.description}</td>
+                                <td>${product.price}</td>
+                                <td>${product.tax}</td>
+                                <td>
+                                    <a href="edit_product.html?id=${product.id}" class="button is-info">Editar</a>
+                                    <button class="button is-danger" onclick="deleteProduct(${product.id})">Eliminar</button>
+                                </td>
+                            </tr>`;
+                    });
+                })
+                .catch(error => console.error("Error al cargar productos", error));
+        }
+
+        function deleteProduct(id) {
+            if (confirm("¿Estás seguro de que deseas eliminar este producto?")) {
+                fetch(`/product/delete/${id}`, { method: "DELETE" })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.status === "OK") {
+                            alert("Producto eliminado correctamente");
+                            fetchProducts();
+                        } else {
+                            alert("Error al eliminar el producto");
+                        }
+                    })
+                    .catch(error => console.error("Error al eliminar producto", error));
+            }
+        }
+    </script>
+</head>
+<body>
+    <nav class="navbar is-warning">
+        <a href="index.html" class="navbar-item">Inicio</a>
+        <a href="waiters.html" class="navbar-item">Camareros</a>
+        <a href="products.html" class="navbar-item">Productos</a>
+        <a href="users.html" class="navbar-item">Usuarios</a>
+        <a href="javascript:logout()" class="navbar-item">Cerrar sesión</a>
+    </nav>
+
+    <section class="section">
+        <div class="container">
+            <h1 class="is-size-3">Lista de Productos</h1>
+            <a href="add_product.html" class="button is-success">Agregar Producto</a>
+            <table class="table is-striped is-fullwidth">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Número</th>
+                        <th>Descripción</th>
+                        <th>Precio</th>
+                        <th>IVA</th>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody id="products"></tbody>
+            </table>
+        </div>
+    </section>
+</body>
+</html>

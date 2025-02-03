@@ -1,0 +1,85 @@
+<!-- edit_user.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Usuario</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
+    <script>
+        onload = function() {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get("id");
+
+            if (id) {
+                fetch(`/user/${id}`)
+                    .then(response => response.json())
+                    .then(user => {
+                        document.getElementById('id_waiter').value = user.id_waiter;
+                        document.getElementById('username').value = user.username;
+                        document.getElementById('is_admin').checked = user.is_admin;
+                    })
+                    .catch(() => alert("Error al cargar los detalles del usuario"));
+            }
+        }
+
+        function updateUser() {
+            let userData = {
+                id_waiter: document.getElementById('id_waiter').value,
+                username: document.getElementById('username').value,
+                is_admin: document.getElementById('is_admin').checked
+            };
+
+            fetch('/user', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(userData)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.status === "OK") {
+                    alert("Usuario actualizado correctamente");
+                    location.href = 'users.html';
+                } else {
+                    alert("Error al actualizar el usuario");
+                }
+            })
+            .catch(error => console.error("Error al actualizar usuario", error));
+        }
+    </script>
+</head>
+<body>
+    <nav class="navbar is-warning">
+        <a href="index.html" class="navbar-item">Inicio</a>
+        <a href="waiters.html" class="navbar-item">Camareros</a>
+        <a href="products.html" class="navbar-item">Productos</a>
+        <a href="users.html" class="navbar-item">Usuarios</a>
+        <a href="javascript:logout()" class="navbar-item">Cerrar sesión</a>
+    </nav>
+
+    <section class="section">
+        <div class="container">
+            <h1 class="is-size-3">Editar Usuario</h1>
+            <form onsubmit="event.preventDefault(); updateUser();">
+                <input id="id_waiter" type="hidden">
+                <div class="field">
+                    <label class="label">Nombre de Usuario</label>
+                    <div class="control">
+                        <input id="username" class="input" type="text" required>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="checkbox">
+                        <input id="is_admin" type="checkbox"> Es administrador
+                    </label>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <button class="button is-primary" type="submit">Actualizar Usuario</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</body>
+</html>
