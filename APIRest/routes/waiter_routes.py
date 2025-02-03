@@ -1,35 +1,31 @@
-from flask import request, session
+from flask import request, session, jsonify
 import json
 import decimal
 from __main__ import app
 from controllers import waiter_controller
-
 from models.models import Waiter
 
-
-class Encoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, decimal.Decimal): return float(obj)
-
 def json_to_waiter(waiter_json):
-    waiter =  Waiter(
-            waiter_json.get('identification'),
-            waiter_json.get('firstname'),
-            waiter_json.get('lastname1'),
-            waiter_json.get('lastname2'),
-            waiter_json.get('phone'),
-            waiter_json.get('email'))
+    waiter = Waiter(
+        waiter_json.get('identification'),
+        waiter_json.get('firstname'),
+        waiter_json.get('lastname1'),
+        waiter_json.get('lastname2'),
+        waiter_json.get('phone'),
+        waiter_json.get('email')
+    )
     return waiter
 
-@app.route("/waiters",methods=["GET"])
+@app.route("/waiters", methods=["GET"])
 def get_all_waiters():
-    waiters,code= waiter_controller.get_all_waiters()
-    return json.dumps(waiters, cls = Encoder),code
+    waiters, code = waiter_controller.get_all_waiters()
+    return jsonify(waiters), code
 
-@app.route("/waiter/<id>",methods=["GET"])
+@app.route("/waiter/<id>", methods=["GET"])
 def get_waiter_by_id(id):
-    waiter,code = waiter_controller.get_waiter_by_id(id)
-    return json.dumps(waiter, cls = Encoder),code
+    waiter, code = waiter_controller.get_waiter_by_id(id)
+    return jsonify(waiter), code
+
 
 @app.route("/waiter/create",methods=["POST"])
 def create_waiter():

@@ -1,0 +1,126 @@
+<!-- waiters.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camareros</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
+    <script>
+        // Función para pintar la lista de camareros
+        onload = function() {
+            pedirCamareros();
+        }
+
+        // Función para obtener la lista de camareros desde el servidor
+        function pedirCamareros() {
+            fetch("/waiters")
+                .then(response => response.json())
+                .then(camareros => {
+                    pintarCamareros(camareros);
+                })
+                .catch(error => {
+                    console.error("Error al cargar los camareros", error);
+                    alert("Ha habido un error al cargar los camareros. Por favor, intente nuevamente.");
+                });
+        }
+
+        // Función para pintar los camareros en la tabla
+        function pintarCamareros(camareros) {
+            let tbody = document.getElementById("camareros");
+            tbody.innerHTML = "";
+
+            camareros.forEach(camarero => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${camarero.identification}</td>
+                        <td>${camarero.firstname} ${camarero.lastname1} ${camarero.lastname2}</td>
+                        <td>${camarero.phone}</td>
+                        <td>${camarero.email}</td>
+                        <td>
+                            <a href="edit_waiter.html?id=${camarero.id}" class="button is-info">Editar</a>
+                        </td>
+                        <td>
+                            <button class="button is-danger" onclick="eliminarCamarero(${camarero.id})">Eliminar</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Función para eliminar un camarero
+        function eliminarCamarero(id) {
+            if (confirm("¿Estás seguro de que deseas eliminar este camarero?")) {
+                fetch(`/waiter/delete/${id}`, {
+                    method: "DELETE"
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.status === "OK") {
+                        alert("Camarero eliminado correctamente");
+                        pedirCamareros();  // Actualiza la lista de camareros
+                    } else {
+                        alert("Hubo un problema al eliminar al camarero");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error al eliminar camarero", error);
+                    alert("Hubo un error al eliminar al camarero.");
+                });
+            }
+        }
+    </script>
+</head>
+<body>
+    <!-- Barra de navegación -->
+    <nav class="navbar is-warning">
+        <a href="index.html" class="navbar-item">Inicio</a>
+        <a href="waiters.html" class="navbar-item">Camareros</a>
+        <a href="products.html" class="navbar-item">Productos</a>
+        <a href="users.html" class="navbar-item">Usuarios</a>
+        <a href="javascript:logout()" class="navbar-item">Cerrar sesión</a>
+    </nav>
+
+    <!-- Contenido principal -->
+    <section class="section">
+        <div class="container">
+            <h1 class="is-size-3">Lista de Camareros</h1>
+            <a href="add_waiter.html" class="button is-success">Agregar Camarero</a>
+            <table class="table is-striped is-fullwidth">
+                <thead>
+                    <tr>
+                        <th>Identificación</th>
+                        <th>Nombre</th>
+                        <th>Teléfono</th>
+                        <th>Correo Electrónico</th>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody id="camareros">
+                    <!-- Los camareros se insertarán aquí dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <script>
+        // Función para cerrar sesión
+        function logout() {
+            fetch('/logout', {
+                method: 'GET',
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.status === 'OK') {
+                    location.href = 'login.html';  // Redirige al login después de cerrar sesión
+                } else {
+                    alert('Error al cerrar sesión');
+                }
+            })
+            .catch(err => console.error('Error al cerrar sesión:', err));
+        }
+    </script>
+</body>
+</html>

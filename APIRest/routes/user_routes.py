@@ -1,14 +1,9 @@
-from flask import request, session
+from flask import request, session, jsonify
 import json
 import decimal
 from __main__ import app
 from controllers import user_controller
 from models.models import User
-
-
-class Encoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, decimal.Decimal): return float(obj)
 
 
 def json_to_user(user_json):
@@ -22,13 +17,11 @@ def json_to_user(user_json):
 @app.route("/users",methods=["GET"])
 def get_all_users():
     users,code= user_controller.get_all_users()
-    return json.dumps(users, cls = Encoder),code
-
+    return jsonify(users), code
 @app.route("/user/<id>",methods=["GET"])
 def get_user_by_id(id):
     user,code = user_controller.get_user_by_id(id)
-    return json.dumps(user, cls = Encoder),code
-
+    return jsonify(user), code
 @app.route("/user/create",methods=["POST"])
 def create_user():
     content_type = request.headers.get('Content-Type')
@@ -67,7 +60,7 @@ Check with postman
 def get_me():
     user_id = session.get("user_id")
     user, code = user_controller.get_user_by_id(int(user_id))
-    return json.dumps(user, cls=Encoder), code
+    return jsonify(user), code
 
 @app.route("/login", methods=["POST"])
 def login():

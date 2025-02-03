@@ -1,4 +1,4 @@
-from flask import request, session
+from flask import request, session, jsonify
 import json
 import decimal
 from __main__ import app
@@ -22,13 +22,11 @@ def json_to_product(product_json):
 @app.route("/products",methods=["GET"])
 def get_all_products():
     products,code= product_controller.get_all_products()
-    return json.dumps(products, cls = Encoder),code
-
+    return jsonify(products), code
 @app.route("/product/<id>",methods=["GET"])
 def get_product_by_id(id):
     product,code = product_controller.get_product_by_id(id)
-    return json.dumps(product, cls = Encoder),code
-
+    return jsonify(product), code
 @app.route("/product/create",methods=["POST"])
 def create_product():
     content_type = request.headers.get('Content-Type')

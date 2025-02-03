@@ -1,30 +1,63 @@
+<!-- dashboard.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página Principal - Restaurante</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="scriptsTest.js" defer></script>
+    <title>Menú Principal</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
+    <script>
+        // Verifica si hay una sesión activa y obtiene los datos del usuario
+        onload = function() {
+            fetch('http://localhost:8080/me')
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.username) {
+                        location.href = 'login.html';  // Redirige al login si no está autenticado
+                    } else {
+                        // Si el usuario está autenticado, muestra su nombre
+                        document.getElementById('username-display').textContent = data.username;
+                    }
+                })
+                .catch(() => {
+                    location.href = 'login.html';  // En caso de error o falta de sesión
+                });
+        }
+
+        // Función para cerrar sesión
+        function logout() {
+            fetch('http://localhost:8080/logout', {
+                method: 'GET',
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.status === 'OK') {
+                    location.href = 'login.html';  // Redirige al login después de cerrar sesión
+                } else {
+                    alert('Error al cerrar sesión');
+                }
+            })
+            .catch(err => console.error('Error al cerrar sesión:', err));
+        }
+    </script>
 </head>
 <body>
-    <div class="container">
-        <h1>Bienvenido al Sistema de Gestión</h1>
-        <div class="button-group">
-            <button onclick="window.location.href='camareros.html'">Gestionar Camareros</button>
-            <button onclick="window.location.href='productos.html'">Gestionar Productos</button>
-            <button onclick="openLogoutModal()">Cerrar Sesión</button>
-        </div>
-    </div>
+    <!-- Barra de navegación -->
+    <nav class="navbar is-warning">
+        <a href="index.html" class="navbar-item">Inicio</a>
+        <a href="waiters.html" class="navbar-item">Camareros</a>
+        <a href="products.html" class="navbar-item">Productos</a>
+        <a href="users.html" class="navbar-item">Usuarios</a>
+        <a href="javascript:logout()" class="navbar-item">Cerrar sesión</a> <!-- Cerrar sesión -->
+    </nav>
 
-    <!-- Modal de Cerrar Sesión -->
-    <div id="logoutModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeLogoutModal()">&times;</span>
-            <h2>¿Estás seguro que deseas cerrar sesión?</h2>
-            <button onclick="logout()">Aceptar</button>
-            <button onclick="closeLogoutModal()">Cancelar</button>
+    <!-- Contenido principal del dashboard -->
+    <section class="section">
+        <div class="container">
+            <h1 class="is-size-3">Bienvenido, <span id="username-display"></span></h1>
+            <p class="is-size-4">Selecciona una opción en el menú para gestionar los recursos del sistema.</p>
         </div>
-    </div>
+    </section>
 </body>
 </html>

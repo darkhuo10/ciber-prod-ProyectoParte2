@@ -3,7 +3,6 @@ from flask import Flask
 from config.vars import load_vars
 
 app = Flask(__name__)
-
 app.config.from_pyfile('config/settings.py')
 load_vars()
   
