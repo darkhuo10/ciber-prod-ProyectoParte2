@@ -6,7 +6,7 @@ services:
     ports:
       - "7777:80"
     volumes:
-      - ./app/static:/var/www/html/static
+      - ./WebClient:/usr/local/apache2/htdocs
     depends_on:
       - python
     environment:
