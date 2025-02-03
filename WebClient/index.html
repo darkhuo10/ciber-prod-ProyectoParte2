@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Principal - Restaurante</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="scriptsTest.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Bienvenido al Sistema de Gestión</h1>
+        <div class="button-group">
+            <button onclick="window.location.href='camareros.html'">Gestionar Camareros</button>
+            <button onclick="window.location.href='productos.html'">Gestionar Productos</button>
+            <button onclick="openLogoutModal()">Cerrar Sesión</button>
+        </div>
+    </div>
+
+    <!-- Modal de Cerrar Sesión -->
+    <div id="logoutModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeLogoutModal()">&times;</span>
+            <h2>¿Estás seguro que deseas cerrar sesión?</h2>
+            <button onclick="logout()">Aceptar</button>
+            <button onclick="closeLogoutModal()">Cancelar</button>
+        </div>
+    </div>
+</body>
+</html>
