@@ -12,7 +12,7 @@
             const id = params.get("id");
 
             if (id) {
-                fetch(`/user/${id}`)
+                fetch(`http://localhost:8080/user/${id}`)
                     .then(response => response.json())
                     .then(user => {
                         document.getElementById('id_waiter').value = user.id_waiter;
@@ -30,7 +30,7 @@
                 is_admin: document.getElementById('is_admin').checked
             };
 
-            fetch('/user', {
+            fetch('http://localhost:8080/user', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(userData)

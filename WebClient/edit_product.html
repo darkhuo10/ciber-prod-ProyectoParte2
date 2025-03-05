@@ -12,7 +12,7 @@
             const id = params.get("id");
 
             if (id) {
-                fetch(`/product/${id}`)
+                fetch(`http://localhost:8080/product/${id}`)
                     .then(response => response.json())
                     .then(product => {
                         document.getElementById('id').value = product.id;
@@ -36,7 +36,7 @@
                 tax: document.getElementById('tax').value
             };
 
-            fetch('/product', {
+            fetch('http://localhost:8080/product', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(productData)

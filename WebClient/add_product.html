@@ -16,7 +16,7 @@
                 tax: document.getElementById('tax').value
             };
 
-            fetch('/product/create', {
+            fetch('http://localhost:8080/product/create', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(productData)

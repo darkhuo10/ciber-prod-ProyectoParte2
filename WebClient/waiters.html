@@ -15,7 +15,7 @@
 
         // Función para obtener la lista de camareros desde el servidor
         function pedirCamareros() {
-            fetch("/waiters")
+            fetch("http://localhost:8080/waiters")
                 .then(response => response.json())
                 .then(camareros => {
                     pintarCamareros(camareros);
@@ -52,7 +52,7 @@
         // Función para eliminar un camarero
         function eliminarCamarero(id) {
             if (confirm("¿Estás seguro de que deseas eliminar este camarero?")) {
-                fetch(`/waiter/delete/${id}`, {
+                fetch(`http://localhost:8080/waiter/delete/${id}`, {
                     method: "DELETE"
                 })
                 .then(response => response.json())
