@@ -11,10 +11,24 @@
         function registrarUsuario() {
             let username = document.getElementById("username").value;
             let password = document.getElementById("password").value;
+            let identification = document.getElementById("identification").value;
+            let firstname = document.getElementById("firstname").value;
+            let lastname1 = document.getElementById("lastname1").value;
+            let lastname2 = document.getElementById("lastname2").value;
+            let phone = document.getElementById("phone").value;
+            let email = document.getElementById("email").value;
+            let id_waiter = 1; // Placeholder for the id_waiter; replace this with dynamic logic if needed.
 
             let data = {
                 username: username,
-                password: password
+                password: password,
+                identification: identification,
+                firstname: firstname,
+                lastname1: lastname1,
+                lastname2: lastname2,
+                phone: phone,
+                email: email,
+                id_waiter: id_waiter
             };
 
             fetch("http://localhost:8080/register", {
@@ -42,7 +56,7 @@
 </head>
 <body>
     <nav class="navbar is-warning">
-        <a href="index.html" class="navbar-item">Inicio</a>
+        <a href="login.html" class="navbar-item">Login</a>
     </nav>
 
     <section class="section">
@@ -60,6 +74,48 @@
                     <label class="label">Contraseña</label>
                     <div class="control">
                         <input class="input" type="password" id="password" placeholder="Contraseña" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Identificación del Camarero</label>
+                    <div class="control">
+                        <input class="input" type="text" id="identification" placeholder="Identificación" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Primer Nombre</label>
+                    <div class="control">
+                        <input class="input" type="text" id="firstname" placeholder="Primer nombre" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Primer Apellido</label>
+                    <div class="control">
+                        <input class="input" type="text" id="lastname1" placeholder="Primer apellido" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Segundo Apellido</label>
+                    <div class="control">
+                        <input class="input" type="text" id="lastname2" placeholder="Segundo apellido" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Teléfono</label>
+                    <div class="control">
+                        <input class="input" type="text" id="phone" placeholder="Teléfono" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Correo Electrónico</label>
+                    <div class="control">
+                        <input class="input" type="email" id="email" placeholder="Correo electrónico" required>
                     </div>
                 </div>
 

@@ -22,7 +22,7 @@
             .then(response => response.json())
             .then(result => {
                 if (result.status === 'OK') {
-                    location.href = 'dashboard.html';  // Redirige al menú principal
+                    location.href = 'index.html';  // Redirige al menú principal
                 } else {
                     alert('Error al iniciar sesión');
                 }
@@ -33,7 +33,7 @@
 </head>
 <body>
     <nav class="navbar is-warning">
-        <a href="register.html" class="navbar-item">Registrarse</a> <!-- Enlace a la página de registro -->
+        <a href="register.html" class="navbar-item">Registro</a> <!-- Enlace a la página de registro -->
     </nav>
 
     <section class="section">

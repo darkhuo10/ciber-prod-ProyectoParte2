@@ -126,7 +126,7 @@ def register_user(id_waiter: int, username: str, password: str):
     try:
         conexion = database.get_dbc()
         with conexion.cursor() as cursor:
-            cursor.execute("SELECT id FROM users WHERE username = %s", (username,))
+            cursor.execute("SELECT id FROM users WHERE username = %s", username)
             if cursor.fetchone() is None:
                 cursor.execute("INSERT INTO users (id_waiter, username, password) VALUES (%s, %s, %s)", (id_waiter, username, password))
                 if cursor.rowcount == 1:
