@@ -1,49 +1,72 @@
-version: '3.9'
-
+version: "3"
 services:
-  apache:
-    build: ./apache
-    ports:
-      - "6007:80"
-    volumes:
-      - ./WebClient:/usr/local/apache2/htdocs
-    depends_on:
-      - python
+  mariadb:
+    image: mariadb
+    container_name: mariadbg7
+    restart: always
     environment:
-      - APACHE_LOG_DIR=/var/log/apache2
+      MARIADB_ROOT_PASSWORD: secret
+      MARIADB_DATABASE: restaurant
+      MARIADB_AUTO_UPGRADE: 1
+      
+    healthcheck:
+      test: ["CMD","healthcheck.sh","--connect","--innodb_initialized"]
+      start_period: 1m
+      interval: 1m
+      timeout: 5s
+      retries: 3
+    volumes:
+      - ./mariadb_data:/var/lib/mysql:rw
+      - ./APIRest/database/restaurant.sql:/docker-entrypoint-initdb.d/restaurant.sql:ro
+    user: mysql
+    networks:
+      - backend
+
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: phpmyadming7
+    restart: always
+    environment:
+      - PMA_HOST=mariadb
+    ports:
+      - 7007:80
+    depends_on:
+      - mariadb
+    networks:
+      - backend
 
   python:
     build: 
       context: .
       dockerfile: app/Dockerfile
-    ports:
+    container_name: pythong7
+    ports: 
       - "8080:8080"
     environment:
-      - DB_HOST=mariadb
-      - DB_PORT=3306
-      - DB_NAME=restaurant
-      - DB_USER=root
-      - DB_PASSWORD=secret
-
-  mariadb:
-    image: mariadb:latest
-    restart: always
-    environment:
-      - MYSQL_ROOT_PASSWORD=secret
-      - MYSQL_DATABASE=restaurant
-      - MYSQL_USER=admin
-      - MYSQL_PASSWORD=admin123
-    volumes:
-      - ./APIRest/database:/docker-entrypoint-initdb.d
-
-
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
-    restart: always
-    ports:
-      - "7007:80"
-    environment:
-      - PMA_HOST=mariadb
-      - MYSQL_ROOT_PASSWORD=secret
+      PYTHONUNBUFFERED: 1
+      DB_USERNAME: root
+      DB_PASSWORD: secret
+      DB_DATABASE: restaurant
+      DB_HOST: mariadb
+      DB_PORT: 3306
+      PORT: 8080
+      HOST: 0.0.0.0
+      SECRET_KEY: 'you-will-never-guess'
+      DEBUG: 'false'
     depends_on:
       - mariadb
+    networks:
+      - backend
+
+  apache:
+    build: ./apache
+    container_name: apacheg7
+    ports:
+      - 6007:80
+    volumes:
+      - ./WebClient:/var/www/html
+    networks:
+      - backend
+
+networks:
+  backend:

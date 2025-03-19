@@ -15,7 +15,7 @@
 
         // Función para obtener la lista de camareros desde el servidor
         function pedirCamareros() {
-            fetch("http://localhost:8080/waiters")
+            fetch("api/waiters")
                 .then(response => response.json())
                 .then(camareros => {
                     pintarCamareros(camareros);

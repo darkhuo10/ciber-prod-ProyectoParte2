@@ -10,7 +10,7 @@
     <script>
         // Verifica si hay una sesión activa y obtiene los datos del usuario
         onload = function() {
-            fetch('http://localhost:8080/me')
+            fetch('api/me')
                 .then(response => response.json())
                 .then(data => {
                     if (!data.username) {
@@ -27,7 +27,7 @@
 
         // Función para cerrar sesión
         function logout() {
-            fetch('http://localhost:8080/logout', {
+            fetch('api/logout', {
                 method: 'GET',
             })
             .then(response => response.json())

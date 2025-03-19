@@ -14,7 +14,7 @@
             const id = params.get("id");
 
             if (id) {
-                fetch(`http://localhost:8080/waiter/${id}`)
+                fetch(`api/waiter/${id}`)
                     .then(response => response.json())
                     .then(waiter => {
                         document.getElementById('identification').value = waiter.identification;
@@ -43,7 +43,7 @@
                 email: document.getElementById('email').value
             };
 
-            fetch('http://localhost:8080/waiter/update', {
+            fetch('api/waiter/update', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

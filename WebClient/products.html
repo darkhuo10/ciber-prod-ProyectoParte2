@@ -12,7 +12,7 @@
         }
 
         function fetchProducts() {
-            fetch("http://localhost:8080/products")
+            fetch("api/products")
                 .then(response => response.json())
                 .then(products => {
                     let tbody = document.getElementById("products");
@@ -37,7 +37,7 @@
 
         function deleteProduct(id) {
             if (confirm("¿Estás seguro de que deseas eliminar este producto?")) {
-                fetch(`http://localhost:8080/product/delete/${id}`, { method: "DELETE" })
+                fetch(`api/product/delete/${id}`, { method: "DELETE" })
                     .then(response => response.json())
                     .then(result => {
                         if (result.status === "OK") {

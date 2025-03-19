@@ -1,17 +1,7 @@
 import os
 from flask import Flask
-from flask_cors import CORS
-from config.vars import load_vars
 
 app = Flask(__name__)
-app.config.from_pyfile('config/settings.py')
-CORS(app)
-load_vars()
-  
-
-#import rutas_upload
-
-#import rutas_verfichero
 
 from routes import waiter_routes
 from routes import product_routes
