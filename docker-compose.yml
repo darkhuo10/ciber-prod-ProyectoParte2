@@ -2,7 +2,7 @@ version: "3"
 services:
   mariadb:
     image: mariadb
-    container_name: mariadbg7
+    container_name: mariadba7
     restart: always
     environment:
       MARIADB_ROOT_PASSWORD: root+123
@@ -24,7 +24,7 @@ services:
 
   phpmyadmin:
     image: phpmyadmin
-    container_name: phpmyadming7
+    container_name: phpmyadmina7
     restart: always
     environment:
       - PMA_HOST=mariadb
@@ -39,7 +39,7 @@ services:
     build: 
       context: .
       dockerfile: app/Dockerfile
-    container_name: pythong7
+    container_name: pythona7
     ports:
       - "8080:8080"
     environment:
@@ -60,11 +60,13 @@ services:
 
   apache:
     build: ./apache
-    container_name: apacheg7
+    container_name: apachea7
     ports:
       - 6007:80
     volumes:
       - ./WebClient:/var/www/html
+    depends_on:
+      - python
     networks:
       - backend
 
