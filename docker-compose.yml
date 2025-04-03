@@ -5,7 +5,7 @@ services:
     container_name: mariadbg7
     restart: always
     environment:
-      MARIADB_ROOT_PASSWORD: secret
+      MARIADB_ROOT_PASSWORD: root+123
       MARIADB_DATABASE: restaurant
       MARIADB_AUTO_UPGRADE: 1
       
@@ -16,7 +16,7 @@ services:
       timeout: 5s
       retries: 3
     volumes:
-      - ./mariadb_data:/var/lib/mysql:rw
+    #  - ./mariadb_data:/var/lib/mysql:rw
       - ./APIRest/database/restaurant.sql:/docker-entrypoint-initdb.d/restaurant.sql:ro
     user: mysql
     networks:
@@ -40,12 +40,12 @@ services:
       context: .
       dockerfile: app/Dockerfile
     container_name: pythong7
-    ports: 
+    ports:
       - "8080:8080"
     environment:
       PYTHONUNBUFFERED: 1
       DB_USERNAME: root
-      DB_PASSWORD: secret
+      DB_PASSWORD: root+123
       DB_DATABASE: restaurant
       DB_HOST: mariadb
       DB_PORT: 3306

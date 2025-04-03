@@ -1,56 +1,52 @@
-<!-- login.html -->
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
+    <title>APP PEPS</title>
+    <style>
+        .error{
+            display: none;
+            color: red;
+        }
+    </style>
     <script>
-        function loginUser() {
-            const loginData = {
-                username: document.getElementById('username').value,
-                password: document.getElementById('password').value
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        function conectar(){
+            document.getElementsByClassName("error")[0].style.display="none";
+            var raw = JSON.stringify({
+                "username": document.getElementById("username").value,
+                "password": document.getElementById("password").value
+            });
+
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw
             };
 
-            fetch('api/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(loginData)
-            })
-            .then(response => response.json())
-            .then(result => {
-                if (result.status === 'OK') {
-                    location.href = 'index.html';  // Redirige al menú principal
-                } else {
-                    alert('Error al iniciar sesión');
-                }
-            })
-            .catch(err => console.error(err));
+            fetch("/api/login", requestOptions)
+                .then(response => response.json())
+                .then(result => {
+                    if (result.status=="OK"){
+                        location.href="index.html";
+                    } else {
+                        document.getElementsByClassName("error")[0].style.display="block";
+                    }
+                })
+                .catch(error => console.log('error', error)); 
         }
     </script>
 </head>
 <body>
-    <nav class="navbar is-warning">
-        <a href="register.html" class="navbar-item">Registro</a> <!-- Enlace a la página de registro -->
-    </nav>
-
-    <section class="section">
-        <h3 class="is-size-3">Iniciar Sesión</h3>
-        <div class="field">
-            <label class="label">Nombre de usuario</label>
-            <div class="control">
-                <input class="input" type="text" id="username" required>
-            </div>
-        </div>
-        <div class="field">
-            <label class="label">Contraseña</label>
-            <div class="control">
-                <input class="input" type="password" id="password" required>
-            </div>
-        </div>
-        <button class="button is-primary" onclick="loginUser()">Iniciar Sesión</button>
-    </section>
+    <h1>BIENVENIDO AL SISTEMA DEL PROFE</h1>
+    <label>Usuario</label><input type="text" name="username" id="username"><br>
+    <label>Clave</label><input type="password" name="password" id="password"><br>
+    <label class="error">Usuario/clave erronea</label>
+    <button type="button" onclick="conectar()">ENVIAR</button>
+    <button type="button" onclick="location.href='register.html'">REGISTRARSE</button>
 </body>
 </html>

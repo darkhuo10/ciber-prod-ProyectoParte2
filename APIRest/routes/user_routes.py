@@ -74,19 +74,6 @@ def login():
     
     return json.dumps(ret), code
 
-'''@app.route("/register", methods=["POST"])
-def register():
-    content_type = request.headers.get("Content-Type")
-    if content_type == "application/json":
-        user_json = request.json
-        id_waiter = user_json.get("id_waiter")
-        username = user_json.get("username")
-        password = user_json.get("password")
-        ret, code = user_controller.register_user(id_waiter, username, password)
-    else:
-        ret = {"status": "Bad request"}
-        code = 401
-    return json.dumps(ret), code'''
 
 @app.route("/register", methods=["POST"])
 def register():
