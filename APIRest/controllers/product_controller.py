@@ -10,7 +10,7 @@ def product_to_json(row):
         "name": row[1],
         "number": row[2],
         "description": row[3],
-        "price": row[4],
+        "price": str(row[4]),
         "tax": row[5],
         "image": row[6],
     }
