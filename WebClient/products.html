@@ -12,7 +12,7 @@
         }
 
         function fetchProducts() {
-            fetch("api/products")
+            fetch("/api/products")
                 .then(response => response.json())
                 .then(products => {
                     let tbody = document.getElementById("products");
@@ -20,6 +20,7 @@
                     products.forEach(product => {
                         tbody.innerHTML += `
                             <tr>
+                                <td>${product.image}</td>
                                 <td>${product.name}</td>
                                 <td>${product.number}</td>
                                 <td>${product.description}</td>
@@ -37,7 +38,7 @@
 
         function deleteProduct(id) {
             if (confirm("¿Estás seguro de que deseas eliminar este producto?")) {
-                fetch(`api/product/delete/${id}`, { method: "DELETE" })
+                fetch(`/api/product/delete/${id}`, { method: "DELETE" })
                     .then(response => response.json())
                     .then(result => {
                         if (result.status === "OK") {

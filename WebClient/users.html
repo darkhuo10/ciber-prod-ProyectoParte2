@@ -12,7 +12,7 @@
         }
 
         function fetchUsers() {
-            fetch("api/users")
+            fetch("/api/users")
                 .then(response => response.json())
                 .then(users => {
                     let tbody = document.getElementById("users");
@@ -35,7 +35,7 @@
 
         function deleteUser(id) {
             if (confirm("¿Estás seguro de que deseas eliminar este usuario?")) {
-                fetch(`api/user/delete/${id}`, { method: "DELETE" })
+                fetch(`/api/user/delete/${id}`, { method: "DELETE" })
                     .then(response => response.json())
                     .then(result => {
                         if (result.status === "OK") {
