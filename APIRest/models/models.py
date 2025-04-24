@@ -1,5 +1,5 @@
 class User():
-    def __init__(self, id_waiter, username, password, is_admin = False):
+    def __init__(self, id_waiter: int, username: str, password: str, is_admin: bool = False):
         self.id_waiter = id_waiter
         self.username = username
         self.password = password
@@ -11,7 +11,7 @@ class User():
 
 
 class Waiter():
-    def __init__(self, identification, firstname, lastname1, lastname2, phone, email):
+    def __init__(self, identification: str, firstname: str, lastname1: str, lastname2: str, phone: str, email: str):
         self.identification = identification
         self.firstname = firstname
         self.lastname1 = lastname1
@@ -24,7 +24,7 @@ class Waiter():
 
 
 class Product():
-    def __init__(self, name, number, description, price, tax, image):
+    def __init__(self, name: str, number: int, description: str, price: float, tax: float, image: str):
         self.name = name
         self.number = number
         self.description = description

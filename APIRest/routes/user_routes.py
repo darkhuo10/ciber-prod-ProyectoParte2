@@ -2,6 +2,7 @@ from flask import request, session, jsonify
 import json
 import decimal
 from __main__ import app
+from APIRest.routes.waiter_routes import json_to_waiter
 from controllers import user_controller, waiter_controller
 from models.models import User, Waiter
 
@@ -75,7 +76,7 @@ def login():
     return json.dumps(ret), code
 
 
-@app.route("/register", methods=["POST"])
+"""@app.route("/register", methods=["POST"])
 def register():
     content_type = request.headers.get("Content-Type")
     if content_type == "application/json":
@@ -112,4 +113,32 @@ def register():
         else:
             return json.dumps(ret), code
     else:
-        return json.dumps({"status": "Bad request"}), 401
+        return json.dumps({"status": "Bad request"}), 401"""
+        
+@app.route("/register", methods=["POST"])
+def register_user():
+    content_type = request.headers.get('Content-Type')
+    if content_type == 'application/json':
+        waiter_json = request.json
+        # Create the waiter using the waiter controller
+        ret, code = waiter_controller.create_waiter(json_to_waiter(waiter_json))
+        
+        # If waiter is successfully created, register the user
+        if code == 200:
+            id_waiter = ret.get('id')  # Assuming the waiter creation returns the id
+            username = 'test'  # Default username
+            password = 'test'  # Default password
+            user_ret, user_code = user_controller.register_user(id_waiter, username, password)
+            
+            # If user registration fails, return an error
+            if user_code != 200:
+                return json.dumps(user_ret), user_code
+
+            return json.dumps(ret), code  # Return the waiter creation response if everything is fine
+        else:
+            return json.dumps(ret), code
+
+    else:
+        ret = {"status": "Bad request"}
+        code = 401
+        return json.dumps(ret), code 
