@@ -32,8 +32,7 @@ def create_product():
     content_type = request.headers.get('Content-Type')
     if (content_type == 'application/json'):
         product_json = request.json
-        ret,code=product_controller.create_product(json_to_product(product_json)) #Check if need to pass to object again
-    else:
+        ret,code=product_controller.create_product(json_to_product(product_json)) 
         ret={"status":"Bad request"}
         code=401
     return json.dumps(ret), code
