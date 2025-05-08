@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 from routes import waiter_routes
 from routes import product_routes
-from routes import user_routes
+#from routes import user_routes
 
 
 if __name__ == '__main__':

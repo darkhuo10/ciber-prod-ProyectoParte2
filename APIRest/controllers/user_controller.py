@@ -122,7 +122,7 @@ def login_user(username: str, password: str):
         print(f"Excepción al validar al usuario: {str(e)}", file=sys.stdout)
         return {"status": "ERROR"}, 500
 
-def register_user(id_waiter: int, username: str, password: str):
+'''def register_user(id_waiter: int, username: str, password: str):
     try:
         conexion = database.get_dbc()
         with conexion.cursor() as cursor:
@@ -139,4 +139,4 @@ def register_user(id_waiter: int, username: str, password: str):
         conexion.close()
     except:
         print("Excepción al registrar al usuario", file=sys.stdout)
-        return {"status": "ERROR"}, 500
+        return {"status": "ERROR"}, 500'''

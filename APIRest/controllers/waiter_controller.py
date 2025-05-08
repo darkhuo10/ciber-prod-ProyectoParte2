@@ -11,7 +11,10 @@ def waiter_to_json(row):
         "lastname1": row[3],
         "lastname2": row[4],
         "phone": row[5],
-        "email": row[6]
+        "email": row[6],
+        "username": row[7],
+        "isadmin": row[8],
+        "password": row[9]
     }
 
 def create_waiter(waiter: Waiter):
@@ -19,9 +22,10 @@ def create_waiter(waiter: Waiter):
         conexion = database.get_dbc()
         with conexion.cursor() as cursor:
             cursor.execute(
-                "INSERT INTO waiters(identification, firstname, lastname1, lastname2, phone, email) VALUES (%s, %s, %s, %s, %s, %s)",
+                "INSERT INTO waiters(identification, firstname, lastname1, lastname2, phone, email, username, password) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
                 (waiter.identification, waiter.firstname, waiter.lastname1, waiter.lastname2, waiter.phone,
-                 waiter.email))
+                 waiter.email, waiter.username, waiter.passwordhash)
+            )
             if cursor.rowcount == 1:
                 ret = {"status": "OK"}
             else:
@@ -87,7 +91,7 @@ def delete_waiter(id: int):
         conexion.close()
         code = 200
     except:
-        print("Error al eliminar el producto", file=sys.stdout)
+        print("Error al eliminar al camarero", file=sys.stdout)
         ret = {"status": "Failure"}
         code = 500
     return ret, code

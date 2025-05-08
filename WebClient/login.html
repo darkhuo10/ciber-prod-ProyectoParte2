@@ -42,11 +42,15 @@
     </script>
 </head>
 <body>
+    <h1>Restaurant name</h1>
+    <nav class="navbar">
+        <a href="register.html" class="navbar-link">Nuevo Usuario</a>
+        <a href="javascript:logout()" class="navbar-link">Cerrar sesión</a>
+    </nav>
     <h1>BIENVENIDO</h1>
     <label>Usuario</label><input type="text" name="username" id="username"><br>
     <label>Clave</label><input type="password" name="password" id="password"><br>
     <label class="error">Usuario/clave erronea</label>
-    <button type="button" onclick="conectar()">ENVIAR</button>
-    <button type="button" onclick="location.href='register.html'">REGISTRARSE</button>
+    <button type="button" onclick="conectar()">Iniciar sesión</button>
 </body>
 </html>

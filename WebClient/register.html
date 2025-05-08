@@ -110,51 +110,43 @@
             let email = document.getElementById("email").value;
 
             let data = {
-                username: username,
-                password: password,
                 identification: identification,
                 firstname: firstname,
                 lastname1: lastname1,
                 lastname2: lastname2,
                 phone: phone,
                 email: email,
+                username: username, 
+                password: password
             };
 
-            fetch("/api/register", {
-                method: "POST",
-    headers: {
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify(data)
-})
-.then(response => {
-    if (!response.ok) {
-        throw new Error("Network response was not ok");
-    }
-    return response.json();  // Parse JSON only if response is okay
-})
-.then(result => {
-    if (result.status === "OK") {
-        alert("Usuario registrado con éxito.");
-        location.href = "login.html";  // Redirigir a la página de login
-    } else {
-        alert("Hubo un error al registrar el usuario.");
-    }
-})
-.catch(error => {
-    console.error("Error al registrar usuario:", error);
-    alert("Hubo un problema al registrar el usuario. Intenta nuevamente.");
-});
+            fetch('/api/waiter/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(waiterData)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.status === "OK") {
+                    alert("Camarero agregado correctamente");
+                    location.href = 'waiters.html'; // Redirigir de nuevo a la lista de camareros
+                } else {
+                    alert("Error al agregar el camarero");
+                }
+            })
+            .catch(error => {
+                console.log(error);
+                alert("Error al agregar el camarero");
+            });
         }
     </script>
 </head>
 <body>
     <h1>Restaurant name</h1>
     <nav class="navbar">
-        <a href="index.html" class="navbar-link">Inicio</a>
-        <a href="waiters.html" class="navbar-link">Camareros</a>
-        <a href="products.html" class="navbar-link">Productos</a>
-        <a href="users.html" class="navbar-link">Usuarios</a>
+        <a href="index.html" class="navbar-link">Iniciar sesión</a>
         <a href="javascript:logout()" class="navbar-link">Cerrar sesión</a>
     </nav>
 
