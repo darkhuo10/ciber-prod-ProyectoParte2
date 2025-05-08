@@ -1,5 +1,5 @@
 class Waiter():
-    def __init__(self, identification: str, firstname: str, lastname1: str, lastname2: str, phone: str, email: str, username: str, passwordhash: str, isadmin: bool = False):
+    def __init__(self, identification: str, firstname: str, lastname1: str, lastname2: str, phone: str, email: str, username: str, password: str, isadmin: bool = False):
         self.identification = identification
         self.firstname = firstname
         self.lastname1 = lastname1
@@ -7,7 +7,7 @@ class Waiter():
         self.phone = phone
         self.email = email
         self.username = username
-        self.passwordhash = passwordhash
+        self.password = password
         self.isadmin = isadmin
         
 

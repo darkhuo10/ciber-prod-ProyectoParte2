@@ -14,7 +14,7 @@ CREATE TABLE waiters (
     email VARCHAR(50) UNIQUE,
     username VARCHAR(30) UNIQUE NOT NULL,
     is_admin BOOLEAN DEFAULT FALSE,
-    password VARCHAR(100) NOT NULL,
+    password VARCHAR(100) NOT NULL
 );
 
 -- Tabla PRODUCTOS

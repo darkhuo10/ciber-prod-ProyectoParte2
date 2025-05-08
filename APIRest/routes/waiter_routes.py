@@ -12,7 +12,11 @@ def json_to_waiter(waiter_json):
         waiter_json.get('lastname1'),
         waiter_json.get('lastname2'),
         waiter_json.get('phone'),
-        waiter_json.get('email')
+        waiter_json.get('email'),
+        waiter_json.get('username'),
+        #waiter_json.get('isadmin'),
+        waiter_json.get('password')
+        
     )
     return waiter
 

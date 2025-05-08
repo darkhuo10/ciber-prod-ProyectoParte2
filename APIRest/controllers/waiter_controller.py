@@ -17,27 +17,41 @@ def waiter_to_json(row):
         "password": row[9]
     }
 
+import sys
+import traceback
+
 def create_waiter(waiter: Waiter):
     try:
         conexion = database.get_dbc()
         with conexion.cursor() as cursor:
             cursor.execute(
-                "INSERT INTO waiters(identification, firstname, lastname1, lastname2, phone, email, username, password) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+                "INSERT INTO waiters(identification, firstname, lastname1, lastname2, phone, email, username, password) "
+                "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
                 (waiter.identification, waiter.firstname, waiter.lastname1, waiter.lastname2, waiter.phone,
-                 waiter.email, waiter.username, waiter.passwordhash)
+                 waiter.email, waiter.username, waiter.password)
             )
+            
+            # Check if the row was inserted successfully
             if cursor.rowcount == 1:
                 ret = {"status": "OK"}
             else:
                 ret = {"status": "Failure"}
-        code = 200
+        
+        # Commit the transaction
         conexion.commit()
         conexion.close()
-    except:
-        print("Error al crear el camarero", file=sys.stdout)
+
+    except Exception as e:
+        # Capture the exception and log the error message for debugging
+        print("Error al crear el camarero:", file=sys.stdout)
+        print(str(e), file=sys.stdout)
+        print(traceback.format_exc(), file=sys.stdout)  # This prints the full traceback for better debugging
         ret = {"status": "Failure"}
         code = 500
+    else:
+        code = 200  # Success code
     return ret, code
+
 
 
 def get_all_waiters():
