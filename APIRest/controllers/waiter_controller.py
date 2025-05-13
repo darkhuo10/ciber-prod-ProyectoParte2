@@ -116,9 +116,8 @@ def update_waiter(waiter: Waiter):
         conexion = database.get_dbc()
         with conexion.cursor() as cursor:
             cursor.execute(
-                # (identification, firstname, lastname1, lastname2, phone, email) VALUES (%s, %s, %s, %s, %s, %s)",
-                "UPDATE waiters SET identification = %s, firstname = %s, lastname1 = %s, lastname2=%s, phone=%s, email=%s WHERE id = %s",
-                (waiter.identification, waiter.firstname, waiter.lastname1, waiter.lastname2, waiter.phone, waiter.email, waiter.id))
+                "UPDATE waiters SET identification = %s, firstname = %s, lastname1 = %s, lastname2=%s, phone=%s, email=%s, username=%s, password=%s WHERE id = %s",
+                (waiter.identification, waiter.firstname, waiter.lastname1, waiter.lastname2, waiter.phone, waiter.email, waiter.username, waiter.password, waiter.id))
             if cursor.rowcount == 1:
                 ret = {"status": "OK"}
             else:
@@ -131,3 +130,19 @@ def update_waiter(waiter: Waiter):
         ret = {"status": "Failure"}
         code = 500
     return ret, code
+
+
+def login_user(username: str, password: str):
+    try:
+        conexion = database.get_dbc()
+        with conexion.cursor() as cursor:
+            cursor.execute("SELECT * FROM users WHERE username = %s AND password = %s", (username, password))
+            user = cursor.fetchone()
+        conexion.close()
+        if user:
+            return {"status": "OK", "user": waiter_to_json(user)}, 200
+        else:
+            return {"status": "ERROR", "mensaje": "Usuario/clave erroneo"}, 200
+    except Exception as e:
+        print(f"Excepción al validar al usuario: {str(e)}", file=sys.stdout)
+        return {"status": "ERROR"}, 500

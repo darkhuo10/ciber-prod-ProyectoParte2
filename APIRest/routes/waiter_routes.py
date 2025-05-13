@@ -57,3 +57,22 @@ def update_waiter():
         ret={"status":"Bad request"}
         code=401
     return json.dumps(ret), code
+
+@app.route("/login", methods=["POST"])
+def login():
+    content_type = request.headers.get("Content-Type")
+    if content_type == "application/json":
+        user_json = request.json
+        username = user_json.get("username")
+        password = user_json.get("password")
+        
+        ret, code = waiter_controller.login_user(username, password)
+        
+        if ret.get("status") == "OK":
+            session["user_id"] = ret["user"]["id"]
+        
+    else:
+        ret = {"status": "Bad request"}
+        code = 401
+    
+    return json.dumps(ret), code
