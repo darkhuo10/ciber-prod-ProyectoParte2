@@ -16,13 +16,12 @@ class Waiter():
 
 
 class Product():
-    def __init__(self, name: str, number: int, description: str, price: float, tax: float, image: str):
+    def __init__(self, name: str, number: int, description: str, price: float, tax: float):
         self.name = name
         self.number = number
         self.description = description
         self.price = price
         self.tax = tax
-        self.image = image
 
     def __repr__(self):
         return f"<Product(name={self.name}, number={self.number}, price={self.price:.2f}, iva={self.tax}%)>"

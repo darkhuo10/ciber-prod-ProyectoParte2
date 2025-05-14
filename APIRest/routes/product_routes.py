@@ -15,8 +15,7 @@ def json_to_product(product_json):
         product_json.get('number'),
         product_json.get('description'),
         product_json.get('price'),
-        product_json.get('tax'),
-        product_json.get('image'))
+        product_json.get('tax'))
     return product
 
 @app.route("/products",methods=["GET"])
@@ -42,12 +41,12 @@ def delete_product(id):
     ret,code=product_controller.delete_product(id)
     return json.dumps(ret), code
 
-@app.route("/product", methods=["PUT"])
-def update_product():
+@app.route("/product/update/<id>", methods=["PUT"])
+def update_product(id):
     content_type = request.headers.get('Content-Type')
     if (content_type == 'application/json'):
         product_json = request.json
-        ret,code=product_controller.update_product(json_to_product(product_json))
+        ret,code=product_controller.update_product(json_to_product(product_json), id)
     else:
         ret={"status":"Bad request"}
         code=401

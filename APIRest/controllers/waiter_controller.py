@@ -2,6 +2,7 @@ from __future__ import print_function
 from database import database
 from models.models import Waiter
 import sys
+import traceback
 
 def waiter_to_json(row):
     return {
@@ -17,8 +18,7 @@ def waiter_to_json(row):
         "password": row[9]
     }
 
-import sys
-import traceback
+
 
 def create_waiter(waiter: Waiter):
     try:

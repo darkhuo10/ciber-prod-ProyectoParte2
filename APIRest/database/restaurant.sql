@@ -24,8 +24,7 @@ CREATE TABLE products (
     description VARCHAR(255),
     number INT NOT NULL,
     price DECIMAL(10,2) NOT NULL,
-    tax INT NOT NULL,
-    image VARCHAR(255)
+    tax INT NOT NULL
 );
 -- Insertar datos de prueba en la tabla de CAMAREROS (waiters)
 INSERT INTO waiters (identification, firstname, lastname1, lastname2, phone, email, username, is_admin, password) VALUES
@@ -34,7 +33,7 @@ INSERT INTO waiters (identification, firstname, lastname1, lastname2, phone, ema
     ('456789123', 'Carlos', 'Fernández', 'Sánchez', '555-8765', 'carlos.fernandez@example.com', 'juanperez', FALSE, 'password123');
 
 -- Insertar datos de prueba en la tabla de PRODUCTOS (products)
-INSERT INTO products (name, description, number, price, tax, image) VALUES
-    ('Pizza Margarita', 'Pizza con tomate, queso mozzarella y albahaca', 8, 8.99, 21, 'pizza_margarita.jpg'),
-    ('Hamburguesa Clásica', 'Hamburguesa con carne de res, lechuga, tomate y cebolla', 6, 6.50, 21, 'hamburguesa_clasica.jpg'),
-    ('Ensalada César', 'Ensalada con lechuga, pollo, croutons y salsa César', 6, 5.99, 21, 'ensalada_cesar.jpg');
+INSERT INTO products (name, description, number, price, tax) VALUES
+    ('Pizza Margarita', 'Pizza con tomate, queso mozzarella y albahaca', 8, 8.99, 21),
+    ('Hamburguesa Clásica', 'Hamburguesa con carne de res, lechuga, tomate y cebolla', 6, 6.50, 21),
+    ('Ensalada César', 'Ensalada con lechuga, pollo, croutons y salsa César', 6, 5.99, 21);
