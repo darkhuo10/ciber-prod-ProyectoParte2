@@ -47,12 +47,12 @@ def delete_waiter(id):
     ret,code=waiter_controller.delete_waiter(id)
     return json.dumps(ret), code
 
-@app.route("/waiter/update", methods=["PUT"])
-def update_waiter():
+@app.route("/waiter/update/<id>", methods=["PUT"])
+def update_waiter(id):
     content_type = request.headers.get('Content-Type')
     if (content_type == 'application/json'):
         waiter_json = request.json
-        ret,code=waiter_controller.update_waiter(json_to_waiter(waiter_json))
+        ret,code=waiter_controller.update_waiter(json_to_waiter(waiter_json), id)
     else:
         ret={"status":"Bad request"}
         code=401

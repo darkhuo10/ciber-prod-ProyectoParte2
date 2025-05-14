@@ -111,13 +111,13 @@ def delete_waiter(id: int):
     return ret, code
 
 
-def update_waiter(waiter: Waiter):
+def update_waiter(waiter: Waiter, id: int):
     try:
         conexion = database.get_dbc()
         with conexion.cursor() as cursor:
             cursor.execute(
                 "UPDATE waiters SET identification = %s, firstname = %s, lastname1 = %s, lastname2=%s, phone=%s, email=%s, username=%s, password=%s WHERE id = %s",
-                (waiter.identification, waiter.firstname, waiter.lastname1, waiter.lastname2, waiter.phone, waiter.email, waiter.username, waiter.password, waiter.id))
+                (waiter.identification, waiter.firstname, waiter.lastname1, waiter.lastname2, waiter.phone, waiter.email, waiter.username, waiter.password, id))
             if cursor.rowcount == 1:
                 ret = {"status": "OK"}
             else:

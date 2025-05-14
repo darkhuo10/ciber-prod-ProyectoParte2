@@ -6,7 +6,99 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Camarero</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e0f7fa;
+            font-size: 16px;
+        }
+        h1, h2 {
+            color: #0288d1;               /* A shade of blue */
+            text-align: center;           /* Center the text */
+            margin: 20px;                 /* Space below the title */
+            padding: 10px;                /* Add padding around the title */
+            text-transform: uppercase;    /* Make the text uppercase */
+            letter-spacing: 2px;          /* Slightly increase letter spacing */
+            font-weight: bold;            /* Make the font bold */
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);  /* Add shadow effect for depth */
+        }
+        h1 { font-size: 3em; }
+        h2 { font-size: 2em; }
+
+        .navbar {
+            font-size: 2em;
+            background-color: #0277bd;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            padding: 5px;
+        }
+        .navbar-link {
+            color: #ffffff;
+            font-weight: bold;
+            text-decoration: none;
+            padding: 10px;
+            border: 1px solid #0277bd;
+        }
+        .navbar-link:hover {
+            border: 1px solid #ffffff;
+            border-radius: 4px;
+            background-color: #ffffff;
+            color: #0277bd;
+            padding: 10px;
+        }
+
+        .container {
+            width: 80%;
+            margin: 40px auto;
+            background: #ffffff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .field {
+            margin-bottom: 15px;
+        }
+
+        .label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .button {
+            padding: 10px 15px;
+            background-color: #0288d1;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: #0277bd;
+        }
+
+        .is-size-3 {
+            font-size: 2.5em;
+            text-align: center;
+            color: #0288d1;
+        }
+    </style>
     <script>
         // Función para obtener los detalles del camarero
         onload = function() {
@@ -14,7 +106,7 @@
             const id = params.get("id");
 
             if (id) {
-                fetch(`api/waiter/${id}`)
+                fetch(`/api/waiter/${id}`)
                     .then(response => response.json())
                     .then(waiter => {
                         document.getElementById('identification').value = waiter.identification;
@@ -23,6 +115,9 @@
                         document.getElementById('lastname2').value = waiter.lastname2;
                         document.getElementById('phone').value = waiter.phone;
                         document.getElementById('email').value = waiter.email;
+                        document.getElementById('username').value = waiter.username;
+                        document.getElementById('password').value = waiter.password;
+
                     })
                     .catch(() => alert("Error al cargar los detalles del camarero"));
             }
@@ -40,10 +135,13 @@
                 lastname1: document.getElementById('lastname1').value,
                 lastname2: document.getElementById('lastname2').value,
                 phone: document.getElementById('phone').value,
-                email: document.getElementById('email').value
+                email: document.getElementById('email').value,
+                username: document.getElementById('username').value,
+                password: document.getElementById('password').value
+
             };
 
-            fetch('api/waiter/update', {
+            fetch(`/api/waiter/update/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -67,86 +165,81 @@
     </script>
 </head>
 <body>
-    <!-- Barra de navegación -->
-    <nav class="navbar is-warning">
-        <a href="index.html" class="navbar-item">Inicio</a>
-        <a href="waiters.html" class="navbar-item">Camareros</a>
-        <a href="products.html" class="navbar-item">Productos</a>
-        <a href="javascript:logout()" class="navbar-item">Cerrar sesión</a>
+    <h1>Restaurant name</h1>
+    <nav class="navbar">
+        <a href="index.html" class="navbar-link">Inicio</a>
+        <a href="waiters.html" class="navbar-link">Camareros</a>
+        <a href="products.html" class="navbar-link">Productos</a>
+        <a href="javascript:logout()" class="navbar-link">Cerrar sesión</a>
     </nav>
 
-    <!-- Formulario para editar camarero -->
     <section class="section">
         <div class="container">
-            <h1 class="is-size-3">Editar Camarero</h1>
+            <h1 class="is-size-3">Actualizar Camarero</h1>
             <form onsubmit="event.preventDefault(); actualizarWaiter();">
                 <div class="field">
-                    <label class="label">Identificación</label>
+                    <label class="label">Nombre de Usuario</label>
                     <div class="control">
-                        <input id="identification" class="input" type="text" required>
+                        <input class="input" type="text" id="username" placeholder="Nombre de usuario" required>
                     </div>
                 </div>
 
                 <div class="field">
-                    <label class="label">Nombre</label>
+                    <label class="label">Contraseña</label>
                     <div class="control">
-                        <input id="firstname" class="input" type="text" required>
+                        <input class="input" type="password" id="password" placeholder="Contraseña" required>
                     </div>
                 </div>
 
                 <div class="field">
-                    <label class="label">Apellido Paterno</label>
+                    <label class="label">Identificación del Camarero</label>
                     <div class="control">
-                        <input id="lastname1" class="input" type="text" required>
+                        <input class="input" type="text" id="identification" placeholder="Identificación" required>
                     </div>
                 </div>
 
                 <div class="field">
-                    <label class="label">Apellido Materno</label>
+                    <label class="label">Primer Nombre</label>
                     <div class="control">
-                        <input id="lastname2" class="input" type="text" required>
+                        <input class="input" type="text" id="firstname" placeholder="Primer nombre" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Primer Apellido</label>
+                    <div class="control">
+                        <input class="input" type="text" id="lastname1" placeholder="Primer apellido" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Segundo Apellido</label>
+                    <div class="control">
+                        <input class="input" type="text" id="lastname2" placeholder="Segundo apellido" required>
                     </div>
                 </div>
 
                 <div class="field">
                     <label class="label">Teléfono</label>
                     <div class="control">
-                        <input id="phone" class="input" type="tel" required>
+                        <input class="input" type="text" id="phone" placeholder="Teléfono" required>
                     </div>
                 </div>
 
                 <div class="field">
                     <label class="label">Correo Electrónico</label>
                     <div class="control">
-                        <input id="email" class="input" type="email" required>
+                        <input class="input" type="email" id="email" placeholder="Correo electrónico" required>
                     </div>
                 </div>
 
                 <div class="field">
                     <div class="control">
-                        <button class="button is-primary" type="submit">Actualizar Camarero</button>
+                        <button class="button" type="submit">Actualizar</button>
                     </div>
                 </div>
             </form>
         </div>
     </section>
-
-    <script>
-        // Función para cerrar sesión
-        function logout() {
-            fetch('http://localhost:8080//logout', {
-                method: 'GET',
-            })
-            .then(response => response.json())
-            .then(result => {
-                if (result.status === 'OK') {
-                    location.href = 'login.html';  // Redirige al login después de cerrar sesión
-                } else {
-                    alert('Error al cerrar sesión');
-                }
-            })
-            .catch(err => console.error('Error al cerrar sesión:', err));
-        }
-    </script>
 </body>
 </html>
