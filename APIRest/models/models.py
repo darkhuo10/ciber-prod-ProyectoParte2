@@ -1,5 +1,5 @@
 class Waiter():
-    def __init__(self, identification: str, firstname: str, lastname1: str, lastname2: str, phone: str, email: str, username: str, password: str, isadmin: bool = False):
+    def __init__(self, identification: str, firstname: str, lastname1: str, lastname2: str, phone: str, email: str, username: str, password: str, lastaccess: str ="", loginerror: int = 0, isadmin: bool = False):
         self.identification = identification
         self.firstname = firstname
         self.lastname1 = lastname1
@@ -8,7 +8,9 @@ class Waiter():
         self.email = email
         self.username = username
         self.password = password
-        self.isadmin = isadmin
+        self.isadmin = isadmin,
+        self.lastaccess = lastaccess,
+        self.loginerror = loginerror
         
 
     def __repr__(self):

@@ -3,6 +3,10 @@ from database import database
 from models.models import Waiter
 import sys
 import traceback
+from flask_wtf.csrf import generate_csrf
+import datetime as dt
+from APIRest.common.functions import compare_password, cipher_password,create_session
+from __main__ import app
 
 def waiter_to_json(row):
     return {
@@ -15,7 +19,9 @@ def waiter_to_json(row):
         "email": row[6],
         "username": row[7],
         "isadmin": row[8],
-        "password": row[9]
+        "password": row[9],
+        "lastaccess": row[10],
+        "loginerror": row[11]
     }
 
 
@@ -28,7 +34,7 @@ def create_waiter(waiter: Waiter):
                 "INSERT INTO waiters(identification, firstname, lastname1, lastname2, phone, email, username, password) "
                 "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
                 (waiter.identification, waiter.firstname, waiter.lastname1, waiter.lastname2, waiter.phone,
-                 waiter.email, waiter.username, waiter.password)
+                 waiter.email, waiter.username, cipher_password(waiter.password))
             )
             
             # Check if the row was inserted successfully
@@ -131,18 +137,46 @@ def update_waiter(waiter: Waiter, id: int):
         code = 500
     return ret, code
 
-
-def login_user(username: str, password: str):
+def login_user(username, passwordIn):
     try:
         conexion = database.get_dbc()
         with conexion.cursor() as cursor:
-            cursor.execute("SELECT * FROM users WHERE username = %s AND password = %s", (username, password))
+            cursor.execute("SELECT isadmin, password, loginerror FROM waiters WHERE username = %s", (username,))
             user = cursor.fetchone()
+
+            if user is None:
+                ret = {"status": "ERROR", "mensaje": "Usuario/clave erroneo"}
+            else:
+                isadmin = user[0]
+                stored_password = user[1]
+                numAccesosErroneos = user[2]
+
+                if compare_password(stored_password.encode("utf-8"), passwordIn.encode("utf-8")):
+                    ret = {
+                        "status": "OK",
+                        "csrf_token": generate_csrf(),
+                        "isadmin": isadmin
+                    }
+                    app.logger.info("Acceso usuario %s correcto", username)
+                    create_session(username, isadmin)
+                    numAccesosErroneos = 0
+                else:
+                    app.logger.info("Acceso usuario %s incorrecto", username)
+                    numAccesosErroneos += 1
+                    ret = {"status": "ERROR", "mensaje": "Usuario/clave erroneo"}
+
+                today = dt.date.today().strftime('%Y-%m-%d')
+                cursor.execute("UPDATE waiters SET loginerror = %s, lastaccess = %s WHERE username = %s",
+                               (numAccesosErroneos, today, username))
+                conexion.commit()
+
         conexion.close()
-        if user:
-            return {"status": "OK", "user": waiter_to_json(user)}, 200
-        else:
-            return {"status": "ERROR", "mensaje": "Usuario/clave erroneo"}, 200
+        code = 200
+
     except Exception as e:
-        print(f"Excepción al validar al usuario: {str(e)}", file=sys.stdout)
-        return {"status": "ERROR"}, 500
+        print("Excepcion al validar al usuario:", e, file=sys.stdout)
+        print(traceback.format_exc(), file=sys.stdout)
+        ret = {"status": "ERROR"}
+        code = 500
+
+    return ret, code

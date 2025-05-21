@@ -57,6 +57,8 @@ services:
       - mariadb
     networks:
       - backend
+    volumes:
+      - ./logapi/:/app/logs
 
   apache:
     build: ./apache
