@@ -1,12 +1,10 @@
 from __future__ import print_function
+from common.functions import cipher_password, compare_password, create_session
+from flask_wtf.csrf import generate_csrf
 from database import database
 from models.models import Waiter
 import sys
 import traceback
-from flask_wtf.csrf import generate_csrf
-import datetime as dt
-from APIRest.common.functions import compare_password, cipher_password,create_session
-from __main__ import app
 
 def waiter_to_json(row):
     return {
@@ -157,11 +155,11 @@ def login_user(username, passwordIn):
                         "csrf_token": generate_csrf(),
                         "isadmin": isadmin
                     }
-                    app.logger.info("Acceso usuario %s correcto", username)
+                    #app.logger.info("Acceso usuario %s correcto", username)
                     create_session(username, isadmin)
                     numAccesosErroneos = 0
                 else:
-                    app.logger.info("Acceso usuario %s incorrecto", username)
+                    #app.logger.info("Acceso usuario %s incorrecto", username)
                     numAccesosErroneos += 1
                     ret = {"status": "ERROR", "mensaje": "Usuario/clave erroneo"}
 

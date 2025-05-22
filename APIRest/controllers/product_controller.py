@@ -9,9 +9,9 @@ def product_to_json(row):
     return {
         "id": row[0],
         "name": row[1],
-        "number": row[2],
+        "number": str(row[2]),
         "description": row[3],
-        "price": str(row[4]),
+        "price": row[4],
         "tax": row[5]
     }
 
@@ -44,6 +44,7 @@ def create_product(product: Product):
     else:
         code = 200  # Success code
     return ret, code
+
 
 def get_all_products():
     try:

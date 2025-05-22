@@ -26,6 +26,8 @@ def get_all_products():
 def get_product_by_id(id):
     product,code = product_controller.get_product_by_id(id)
     return jsonify(product), code
+
+
 @app.route("/product/create",methods=["POST"])
 def create_product():
     content_type = request.headers.get('Content-Type')

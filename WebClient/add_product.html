@@ -18,20 +18,29 @@
 
             fetch('/api/product/create', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify(productData)
             })
             .then(response => response.json())
             .then(result => {
                 if (result.status === "OK") {
                     alert("Producto agregado correctamente");
-                    location.href = 'products.html';
+                    location.href = 'products.html'; // Redirigir de nuevo a la lista de camareros
                 } else {
                     alert("Error al agregar el producto");
                 }
             })
-            .catch(error => console.error("Error al agregar producto", error));
+            .catch(error => {
+                console.log(error);
+                alert("Error al agregar el producto");
+            });
         }
+
+
+
+        
     </script>
 </head>
 <body>
