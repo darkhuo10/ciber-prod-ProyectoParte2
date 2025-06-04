@@ -1,9 +1,9 @@
-<!-- products.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Productos</title>
     <style>
         * {
@@ -91,35 +91,71 @@
         .btn-danger { background: red; color: white; }
     </style>
     <script>
-        onload = function() {
-            fetchProducts();
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        if (sessionStorage.getItem("csrf_token")) {
+            myHeaders.append("X-CSRFToken", sessionStorage.getItem("csrf_token"));
         }
+        var role = "user";
+
+        window.onload = function () {
+            if (sessionStorage.getItem("role")) {
+                role = sessionStorage.getItem("role");
+                if (role === "admin") {
+                    document.getElementById("enlaceAgregar").classList.remove("oculto");
+                }
+            }
+            fetchProducts();
+        };
 
         function fetchProducts() {
-            fetch("/api/products")
+            fetch("/api/products", { headers: myHeaders })
                 .then(response => response.json())
                 .then(products => {
-                    let tbody = document.getElementById("products");
-                    tbody.innerHTML = "";
-                    products.forEach(product => {
-                        tbody.innerHTML += `
-                            <tr>
-                                <td>${product.name}</td>
-                                <td>${product.description}</td>
-                                <td>${product.number}</td>
-                                <td>${product.price}</td>
-                                <td>${product.tax}</td>
-                                <td><a href="edit_product.html?id=${product.id}" class="button btn-info">Editar</a></td>
-                                <td><button class="button btn-danger" onclick="deleteProduct(${product.id})">Eliminar</button></td>
-                            </tr>`;
-                    });
+                    if (products.status) {
+                        location.href = "index.html";
+                    } else {
+                        paintProducts(products);
+                    }
                 })
-                .catch(error => console.error("Error al cargar productos", error));
+                .catch(error => {
+                    console.error("Error al cargar productos", error);
+                    alert("Ha habido un error al recuperar los productos. Refresque la página.");
+                });
+        }
+        
+
+        function paintProducts(products) {
+            let tbody = document.getElementById("products");
+            tbody.innerHTML = "";
+
+            products.forEach(product => {
+                let priceIVA = (parseFloat(product.price) + parseFloat(product.price) * parseFloat(product.tax) / 100).toFixed(2);
+
+                let row = `<tr>
+                    <td>${product.name}</td>
+                    <td>${product.number}</td>
+                    <td>${product.description}</td>
+                    <td>${product.price}</td>
+                    <td>${product.tax}</td>
+                    <td>${priceIVA}</td>`;
+
+                if (role === "admin") {
+                    row += `<td><a href="edit_product.html?id=${product.id}" class="button btn-info">Editar</a></td>
+                            <td><button class="button btn-danger" onclick="deleteProduct(${product.id})">Eliminar</button></td>`;
+                } else {
+                    row += `<td></td><td></td>`;
+                }
+
+                row += `</tr>`;
+
+                tbody.innerHTML += row;
+            });
         }
 
         function deleteProduct(id) {
             if (confirm("¿Estás seguro de que deseas eliminar este producto?")) {
-                fetch(`/api/product/delete/${id}`, { method: "DELETE" })
+                fetch(`/api/product/delete/${id}`, { method: "DELETE", headers: myHeaders })
                     .then(response => response.json())
                     .then(result => {
                         if (result.status === "OK") {
@@ -129,24 +165,41 @@
                             alert("Error al eliminar el producto");
                         }
                     })
-                    .catch(error => console.error("Error al eliminar producto", error));
+                    .catch(error => {
+                        console.error("Error al eliminar producto", error);
+                        alert("Se ha producido un error al eliminar el producto");
+                    });
             }
+        }
+
+        function logout() {
+            fetch("/api/logout", { method: "GET", headers: myHeaders })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.status === "OK") {
+                        location.href = "index.html";
+                    } else {
+                        alert("No se ha podido cerrar sesión");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error al cerrar sesión", error);
+                    alert("Se ha producido un error y no se ha podido cerrar sesión");
+                });
         }
     </script>
 </head>
 <body>
     <h1>Restaurant name</h1>
     <nav class="navbar">
-        <a href="index.html" class="navbar-link">Inicio</a>
-        <a href="waiters.html" class="navbar-link">Camareros</a>
         <a href="products.html" class="navbar-link">Productos</a>
         <a href="javascript:logout()" class="navbar-link">Cerrar sesión</a>
     </nav>
 
     <section class="section">
         <div class="container">
-            <h1 class="is-size-3">Lista de Productos</h1>
-            <a href="add_product.html" class="button btn-success">Agregar Producto</a>
+            <h2>Lista de Productos</h2>
+            <a id="enlaceAgregar" href="add_product.html" class="button btn-success oculto">Agregar Producto</a>
             <table class="data-table">
                 <thead>
                     <tr>
@@ -155,6 +208,7 @@
                         <th>Descripción</th>
                         <th>Precio</th>
                         <th>IVA</th>
+                        <th>Precio IVA</th>
                         <th>Editar</th>
                         <th>Eliminar</th>
                     </tr>

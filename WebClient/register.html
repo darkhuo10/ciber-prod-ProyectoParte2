@@ -1,222 +1,56 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Usuario</title>
+    <title>APP PEPS</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #e0f7fa;
-            font-size: 16px;
-        }
-        h1, h2 {
-            color: #0288d1;               /* A shade of blue */
-            text-align: center;           /* Center the text */
-            margin: 20px;                 /* Space below the title */
-            padding: 10px;                /* Add padding around the title */
-            text-transform: uppercase;    /* Make the text uppercase */
-            letter-spacing: 2px;          /* Slightly increase letter spacing */
-            font-weight: bold;            /* Make the font bold */
-            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);  /* Add shadow effect for depth */
-        }
-        h1 { font-size: 3em; }
-        h2 { font-size: 2em; }
-
-        .navbar {
-            font-size: 2em;
-            background-color: #0277bd;
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            padding: 5px;
-        }
-        .navbar-link {
-            color: #ffffff;
-            font-weight: bold;
-            text-decoration: none;
-            padding: 10px;
-            border: 1px solid #0277bd;
-        }
-        .navbar-link:hover {
-            border: 1px solid #ffffff;
-            border-radius: 4px;
-            background-color: #ffffff;
-            color: #0277bd;
-            padding: 10px;
-        }
-
-        .container {
-            width: 80%;
-            margin: 40px auto;
-            background: #ffffff;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
-
-        .field {
-            margin-bottom: 15px;
-        }
-
-        .label {
-            font-weight: bold;
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        .input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        .button {
-            padding: 10px 15px;
-            background-color: #0288d1;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        .button:hover {
-            background-color: #0277bd;
-        }
-
-        .is-size-3 {
-            font-size: 2.5em;
-            text-align: center;
-            color: #0288d1;
+        .error{
+            display: none;
+            color: red;
         }
     </style>
     <script>
-        // Función para procesar el formulario de registro
-        function registrarUsuario() {
-            let username = document.getElementById("username").value;
-            let password = document.getElementById("password").value;
-            let identification = document.getElementById("identification").value;
-            let firstname = document.getElementById("firstname").value;
-            let lastname1 = document.getElementById("lastname1").value;
-            let lastname2 = document.getElementById("lastname2").value;
-            let phone = document.getElementById("phone").value;
-            let email = document.getElementById("email").value;
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
 
-            let data = {
-                identification: identification,
-                firstname: firstname,
-                lastname1: lastname1,
-                lastname2: lastname2,
-                phone: phone,
-                email: email,
-                username: username, 
-                password: password
+        function conectar(){
+            document.getElementsByClassName("error")[0].style.display="none";
+            var raw = JSON.stringify({
+                "username": document.getElementById("username").value,
+                "password": document.getElementById("password").value,
+                "email": document.getElementById("email").value,
+                "role": document.getElementById("role").value
+            });
+
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw
             };
 
-            fetch('/api/waiter/create', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(result => {
-                if (result.status === "OK") {
-                    alert("Camarero agregado correctamente");
-                    location.href = 'waiters.html'; // Redirigir de nuevo a la lista de camareros
-                } else {
-                    alert("Error al agregar el camarero");
-                }
-            })
-            .catch(error => {
-                console.log(error);
-                alert("Error al agregar el camarero");
-            });
+            fetch("/api/register", requestOptions)
+                .then(response => response.json())
+                .then(result => {
+                    if (result.status=="OK"){
+                        alert("Usuario registrado correctamente");
+                        location.href="index.html";
+                    } else {
+                        document.getElementsByClassName("error")[0].style.display="block";
+                    }
+                })
+                .catch(error => console.log('error', error)); 
         }
     </script>
 </head>
 <body>
-    <h1>Restaurant name</h1>
-    <nav class="navbar">
-        <a href="index.html" class="navbar-link">Iniciar sesión</a>
-        <a href="javascript:logout()" class="navbar-link">Cerrar sesión</a>
-    </nav>
-
-    <section class="section">
-        <div class="container">
-            <h1 class="is-size-3">Registro de Usuario</h1>
-            <form onsubmit="event.preventDefault(); registrarUsuario();">
-                <div class="field">
-                    <label class="label">Nombre de Usuario</label>
-                    <div class="control">
-                        <input class="input" type="text" id="username" placeholder="Nombre de usuario" required>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label class="label">Contraseña</label>
-                    <div class="control">
-                        <input class="input" type="password" id="password" placeholder="Contraseña" required>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label class="label">Identificación del Camarero</label>
-                    <div class="control">
-                        <input class="input" type="text" id="identification" placeholder="Identificación" required>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label class="label">Primer Nombre</label>
-                    <div class="control">
-                        <input class="input" type="text" id="firstname" placeholder="Primer nombre" required>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label class="label">Primer Apellido</label>
-                    <div class="control">
-                        <input class="input" type="text" id="lastname1" placeholder="Primer apellido" required>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label class="label">Segundo Apellido</label>
-                    <div class="control">
-                        <input class="input" type="text" id="lastname2" placeholder="Segundo apellido" required>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label class="label">Teléfono</label>
-                    <div class="control">
-                        <input class="input" type="text" id="phone" placeholder="Teléfono" required>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label class="label">Correo Electrónico</label>
-                    <div class="control">
-                        <input class="input" type="email" id="email" placeholder="Correo electrónico" required>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <div class="control">
-                        <button class="button" type="submit">Registrar</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </section>
+    <h1>REGISTRO DEL SISTEMA</h1>
+    <label>Usuario</label><input type="text" name="username" id="username" required><br>
+    <label>Clave</label><input type="password" name="password" id="password" required><br>
+    <label>Correo</label><input type="email" name="email" id="email" required><br>
+    <label>Perfil</label><input type="text" disabled name="role" id="role" value="user"><br>
+    <label class="error">Usuario ya existe</label>
+    <button type="button" onclick="conectar()">ENVIAR</button>
 </body>
 </html>

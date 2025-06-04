@@ -17,18 +17,16 @@
             background-color: #e0f7fa;
             font-size: 16px;
         }
-        h1, h2 {
+        h1 {
             color: #0288d1;
+            text-transform: uppercase;
             text-align: center;
             margin: 20px;
             padding: 10px;
-            text-transform: uppercase;
             letter-spacing: 2px;
             font-weight: bold;
             text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
         }
-        h1 { font-size: 3em; }
-        h2 { font-size: 2em; }
 
         .navbar {
             font-size: 2em;
@@ -36,30 +34,32 @@
             display: flex;
             gap: 20px;
             justify-content: center;
-            padding: 5px;
+            padding: 10px 0;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 40px;
         }
         .navbar-link {
             color: #ffffff;
             font-weight: bold;
             text-decoration: none;
-            padding: 10px;
+            padding: 10px 20px;
             border: 1px solid #0277bd;
+            border-radius: 4px;
         }
         .navbar-link:hover {
-            border: 1px solid #ffffff;
-            border-radius: 4px;
             background-color: #ffffff;
             color: #0277bd;
-            padding: 10px;
+            border: 1px solid #ffffff;
         }
 
         .container {
             width: 80%;
-            margin: 40px auto;
+            margin: 0 auto;
             background: #ffffff;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
             border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
 
         .field {
@@ -68,35 +68,34 @@
 
         .label {
             font-weight: bold;
-            margin-bottom: 8px;
+            color: #0277bd;
+            margin-bottom: 6px;
             display: block;
         }
 
         .input {
             width: 100%;
-            padding: 8px;
+            padding: 10px;
+            font-size: 16px;
             border: 1px solid #ccc;
             border-radius: 4px;
         }
 
         .button {
-            padding: 10px 15px;
-            background-color: #0288d1;
+            margin-top: 20px;
+            background-color: #0277bd;
             color: white;
             border: none;
-            border-radius: 4px;
+            padding: 10px 25px;
             font-size: 16px;
+            border-radius: 4px;
             cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .button:hover {
-            background-color: #0277bd;
-        }
-
-        .is-size-3 {
-            font-size: 2.5em;
-            text-align: center;
-            color: #0288d1;
+            background-color: #01579b;
         }
     </style>
     <script>
@@ -155,8 +154,6 @@
 <body>
     <h1>Restaurant name</h1>
     <nav class="navbar">
-        <a href="index.html" class="navbar-link">Inicio</a>
-        <a href="waiters.html" class="navbar-link">Camareros</a>
         <a href="products.html" class="navbar-link">Productos</a>
         <a href="javascript:logout()" class="navbar-link">Cerrar sesión</a>
     </nav>
