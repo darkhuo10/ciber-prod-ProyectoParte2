@@ -1,36 +1,36 @@
 -- Crear base de datos
 DROP DATABASE IF EXISTS restaurant;
 CREATE DATABASE restaurant;
+CREATE USER 'user'@'%' IDENTIFIED BY 'user+123';
+GRANT ALL PRIVILEGES ON restaurant.* TO 'user'@'%';
+FLUSH PRIVILEGES;
 USE restaurant;
-
--- Tabla CAMAREROS
-CREATE TABLE waiters (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    identification CHAR(9) UNIQUE NOT NULL,
-    firstname VARCHAR(40) NOT NULL,
-    lastname1 VARCHAR(30) NOT NULL,
-    lastname2 VARCHAR(30) NULL,
-    phone VARCHAR(15) UNIQUE,
-    email VARCHAR(50) UNIQUE,
-    username VARCHAR(30) UNIQUE NOT NULL,
-    isadmin BOOLEAN DEFAULT FALSE,
-    password VARCHAR(100) NOT NULL,
-    lastaccess DATE,
-    loginerror INTEGER
-);
 
 -- Tabla PRODUCTOS
 CREATE TABLE products (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    description VARCHAR(255),
+    description VARCHAR(255) NOT NULL,
     number INT NOT NULL,
     price DECIMAL(10,2) NOT NULL,
     tax INT NOT NULL
 );
--- Insertar datos de prueba en la tabla de CAMAREROS (waiters)
-INSERT INTO waiters (identification, firstname, lastname1, lastname2, phone, email, username, isadmin, password, loginerror) VALUES
-    ('987654321', 'nombre', 'ap1', 'ap2', '555-5678', 'admin@example.com', 'adminuser', TRUE, '$2b$10$bmRewuyQ57fOW3v9YHQuZe8TpqUA5BBC7D864QpY/DJLXSKbP.W7i', 0);
+
+
+CREATE TABLE users(
+	username VARCHAR(100) NOT NULL PRIMARY KEY,
+    passwd VARCHAR(255) NOT NULL,
+    role VARCHAR(100) NOT NULL,
+    activity VARCHAR(20) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    last_login DATE,
+    block_date DATE,
+    login_errors INTEGER,
+    change_passwd BOOLEAN
+);
+INSERT INTO `users` (`username`, `passwd`, `role`,`activity`, `email`,`login_errors`,`last_login`) 
+VALUES ('prueba','$2b$10$pkQRT4kV1j6nag3/z90R9u2pLCDo8Eyyp0KGk2Sr9.D6H48/17QZK', 'admin', 'active','test@test.com', 0, '2022-03-01 00:00');
+
 
 -- Insertar datos de prueba en la tabla de PRODUCTOS (products)
 INSERT INTO products (name, description, number, price, tax) VALUES
