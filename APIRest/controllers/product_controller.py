@@ -1,119 +1,120 @@
 from __future__ import print_function
-from database import database
-from models.models import Product
-import sys
-import traceback
+from common.functions import sanitize_input
+from database.database import get_dbc
+from __main__ import app
 
-def product_to_json(row):
-    #name: str, number: int, description: str, price: float, tax: float, image: str
+def product_to_json(product):
     return {
-        "id": row[0],
-        "name": row[1],
-        "number": str(row[2]),
-        "description": row[3],
-        "price": row[4],
-        "tax": row[5]
+        'id': product[0],
+        'name': sanitize_input(product[1]),
+        'description': sanitize_input(product[2]),
+        'number': product[3],
+        'price': product[4],
+        'tax': product[5]
     }
 
-def create_product(product: Product):
+
+
+def create_product(name, description, number, price, tax):
+    ret = {"status": "Failure"}
+    code = 500
     try:
-        conexion = database.get_dbc()
-        with conexion.cursor() as cursor:
+        conn = get_dbc()
+        with conn.cursor() as cursor:
             cursor.execute(
                 "INSERT INTO products(name, description, number, price, tax) VALUES (%s, %s, %s, %s, %s)",
-                (product.name, product.description, product.number, product.price, product.tax)
+                (name, description, number, price, tax)
             )
-
-            # Check if the row was inserted successfully
             if cursor.rowcount == 1:
                 ret = {"status": "OK"}
+                code = 200
             else:
-                ret = {"status": "Failure"}
+                code = 400  # or some failure code
 
-        # Commit and close
-        conexion.commit()
-        conexion.close()
+        conn.commit()
+        conn.close()
 
     except Exception as e:
-        # Error handling and detailed traceback
-        print("Error al crear el producto:", file=sys.stdout)
-        print(str(e), file=sys.stdout)
-        print(traceback.format_exc(), file=sys.stdout)
+        app.logger.error(f"Excepcion al insertar un producto: {e}")
         ret = {"status": "Failure"}
         code = 500
-    else:
-        code = 200  # Success code
     return ret, code
 
 
+
 def get_all_products():
+    products_json = []
+    code = 500
+    conn = None
     try:
-        conexion = database.get_dbc()
-        with conexion.cursor() as cursor:
-            cursor.execute("SELECT * FROM products")
+        conn = get_dbc()
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT id, name, description, number, price, tax FROM products")
             products = cursor.fetchall()
-            products_json=[]
             if products:
                 for p in products:
                     products_json.append(product_to_json(p))
-        conexion.close()
-        code=200
-    except:
-        print("Error al obtener los productos", file=sys.stdout)
-        products_json=[]
-        code=500
+        code = 200
+    except Exception as e:
+        app.logger.error(f"Excepción al obtener los productos: {str(e)}")
+    finally:
+        if conn:
+            conn.close()
     return products_json, code
 
-def get_product_by_id(id: int):
+
+
+def get_product_by_id(id):
     product_json = {}
     try:
-        conexion = database.get_dbc()
-        with conexion.cursor() as cursor:
-            cursor.execute("SELECT * FROM products WHERE id = %s", (id))
+        conn = get_dbc()
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT id, name, description, number, price, tax FROM products WHERE id = %s LIMIT 1", (id,))
             product = cursor.fetchone()
             if product is not None:
                 product_json = product_to_json(product)
-        conexion.close()
+        conn.close()
         code=200
     except:
-        print("Error al recuperar el producto", file=sys.stdout)
+        app.logger.info("Excepcion al consultar un producto")
         code=500
     return product_json, code
 
 
-def delete_product(id: int):
+def delete_product(id):
     try:
-        conexion = database.get_dbc()
-        with conexion.cursor() as cursor:
-            cursor.execute("DELETE FROM products WHERE id = %s", (id))
+        conn = get_dbc()
+        with conn.cursor() as cursor:
+            cursor.execute("DELETE FROM products WHERE id = %s", (id,))
             if cursor.rowcount == 1:
                 ret={"status": "OK" }
             else:
                 ret={"status": "Failure" }
-        conexion.commit()
-        conexion.close()
+        conn.commit()
+        conn.close()
         code=200
     except:
-        print("Error al eliminar el producto", file=sys.stdout)
+        app.logger.info("Excepcion al eliminar un producto")
         ret = {"status": "Failure" }
         code=500
     return ret,code
 
-def update_product(product: Product, id: int):
+
+def update_product(id, name, description, number, price, tax):
     try:
-        conexion = database.get_dbc()
-        with conexion.cursor() as cursor:
+        conn = get_dbc()
+        with conn.cursor() as cursor:
             cursor.execute("UPDATE products SET name = %s, description = %s, number = %s, price=%s, tax= %s WHERE id = %s",
-                       (product.name, product.description, product.number, product.price, product.tax, id))
+                       (name, description, number, price, tax, id))
             if cursor.rowcount == 1:
                 ret={"status": "OK" }
             else:
                 ret={"status": "Failure" }
-        conexion.commit()
-        conexion.close()
+        conn.commit()
+        conn.close()
         code=200
     except:
-        print("Error al actualizar el producto", file=sys.stdout)
+        app.logger.info("Excepcion al actualziar un producto")
         ret = {"status": "Failure" }
         code=500
     return ret,code
