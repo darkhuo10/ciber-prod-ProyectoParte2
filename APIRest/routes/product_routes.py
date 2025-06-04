@@ -34,8 +34,8 @@ def create_product():
     if (content_type == 'application/json'):
         product_json = request.json
         if "name" in product_json and "description" in product_json and "number" in product_json and "price" in product_json and "tax" in product_json:
-            name = sanitize_input(product_json["name"])
-            description = sanitize_input(product_json["description"])
+            name = sanitize_input(str(product_json["name"]))
+            description = sanitize_input(str(product_json["description"]))
             number = product_json["number"]
             price = product_json["price"]
             tax = product_json["tax"]
@@ -77,8 +77,8 @@ def update_product():
         product_json = request.json
         if "id" in product_json and "name" in product_json and "description" in product_json and "number" in product_json and "price" in product_json and "tax" in product_json:
             id = product_json["id"]
-            name = sanitize_input(product_json["name"])
-            description = sanitize_input(product_json["description"])
+            name = sanitize_input(str(product_json["name"]))
+            description = sanitize_input(str(product_json["description"]))
             number = product_json["number"]
             price = product_json["price"]
             tax = product_json["tax"]

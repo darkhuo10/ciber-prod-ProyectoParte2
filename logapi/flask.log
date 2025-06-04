@@ -1,0 +1,55 @@
+[2025-06-04 08:51:32,360] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://172.31.0.3:8080
+[2025-06-04 08:51:32,360] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2025-06-04 08:53:12,750] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://192.168.0.3:8080
+[2025-06-04 08:53:12,750] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2025-06-04 08:53:51,255] INFO in user_controller: Acceso user prueba correcto
+[2025-06-04 08:53:51,279] INFO in app: path: /login | method: POST | status: 200 OK | size: 142 >>> 192.168.0.5
+[2025-06-04 08:53:51,280] INFO in _internal: 192.168.0.5 - - [04/Jun/2025 08:53:51] "POST /login HTTP/1.1" 200 -
+[2025-06-04 08:54:18,635] INFO in app: path: /products | method: GET | status: 200 OK | size: 456 >>> 192.168.0.5
+[2025-06-04 08:54:18,635] INFO in _internal: 192.168.0.5 - - [04/Jun/2025 08:54:18] "GET /products HTTP/1.1" 200 -
+[2025-06-04 08:54:20,194] INFO in app: path: /products | method: GET | status: 200 OK | size: 456 >>> 192.168.0.5
+[2025-06-04 08:54:20,195] INFO in _internal: 192.168.0.5 - - [04/Jun/2025 08:54:20] "GET /products HTTP/1.1" 200 -
+[2025-06-04 08:54:20,334] INFO in app: path: /products | method: GET | status: 200 OK | size: 456 >>> 192.168.0.5
+[2025-06-04 08:54:20,334] INFO in _internal: 192.168.0.5 - - [04/Jun/2025 08:54:20] "GET /products HTTP/1.1" 200 -
+[2025-06-04 08:54:21,916] INFO in app: path: /logout | method: GET | status: 200 OK | size: 16 >>> 192.168.0.5
+[2025-06-04 08:54:21,917] INFO in _internal: 192.168.0.5 - - [04/Jun/2025 08:54:21] "GET /logout HTTP/1.1" 200 -
+[2025-06-04 08:54:40,284] INFO in app: path: /products | method: GET | status: 403 FORBIDDEN | size: 23 >>> 192.168.0.5
+[2025-06-04 08:54:40,285] INFO in _internal: 192.168.0.5 - - [04/Jun/2025 08:54:40] "[31m[1mGET /products HTTP/1.1[0m" 403 -
+[2025-06-04 08:54:51,290] INFO in user_controller: Acceso user prueba incorrecto
+[2025-06-04 08:54:51,321] INFO in app: path: /login | method: POST | status: 200 OK | size: 55 >>> 192.168.0.5
+[2025-06-04 08:54:51,321] INFO in _internal: 192.168.0.5 - - [04/Jun/2025 08:54:51] "POST /login HTTP/1.1" 200 -
+[2025-06-04 08:54:57,291] INFO in user_controller: Acceso user prueba correcto
+[2025-06-04 08:54:57,324] INFO in app: path: /login | method: POST | status: 200 OK | size: 142 >>> 192.168.0.5
+[2025-06-04 08:54:57,325] INFO in _internal: 192.168.0.5 - - [04/Jun/2025 08:54:57] "POST /login HTTP/1.1" 200 -
+[2025-06-04 08:54:57,394] INFO in app: path: /products | method: GET | status: 200 OK | size: 456 >>> 192.168.0.5
+[2025-06-04 08:54:57,395] INFO in _internal: 192.168.0.5 - - [04/Jun/2025 08:54:57] "GET /products HTTP/1.1" 200 -
+[2025-06-04 08:55:02,830] INFO in app: path: /logout | method: GET | status: 200 OK | size: 16 >>> 192.168.0.5
+[2025-06-04 08:55:02,830] INFO in _internal: 192.168.0.5 - - [04/Jun/2025 08:55:02] "GET /logout HTTP/1.1" 200 -
+[2025-06-04 08:55:22,793] INFO in user_controller: Nuevo user creado
+[2025-06-04 08:55:22,793] INFO in app: path: /register | method: POST | status: 200 OK | size: 16 >>> 192.168.0.5
+[2025-06-04 08:55:22,793] INFO in _internal: 192.168.0.5 - - [04/Jun/2025 08:55:22] "POST /register HTTP/1.1" 200 -
+[2025-06-04 08:55:31,268] INFO in user_controller: Acceso user usuario correcto
+[2025-06-04 08:55:31,296] INFO in app: path: /login | method: POST | status: 200 OK | size: 141 >>> 192.168.0.5
+[2025-06-04 08:55:31,297] INFO in _internal: 192.168.0.5 - - [04/Jun/2025 08:55:31] "POST /login HTTP/1.1" 200 -
+[2025-06-04 08:55:31,365] INFO in app: path: /products | method: GET | status: 200 OK | size: 456 >>> 192.168.0.5
+[2025-06-04 08:55:31,366] INFO in _internal: 192.168.0.5 - - [04/Jun/2025 08:55:31] "GET /products HTTP/1.1" 200 -
+[2025-06-04 08:55:34,940] INFO in app: path: /products | method: GET | status: 200 OK | size: 456 >>> 192.168.0.5
+[2025-06-04 08:55:34,940] INFO in _internal: 192.168.0.5 - - [04/Jun/2025 08:55:34] "GET /products HTTP/1.1" 200 -
+[2025-06-04 08:55:42,051] INFO in app: path: /logout | method: GET | status: 200 OK | size: 16 >>> 192.168.0.5
+[2025-06-04 08:55:42,052] INFO in _internal: 192.168.0.5 - - [04/Jun/2025 08:55:42] "GET /logout HTTP/1.1" 200 -
+[2025-06-04 09:43:35,146] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://192.168.16.3:8080
+[2025-06-04 09:43:35,146] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2025-06-04 09:44:32,918] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://192.168.32.3:8080
+[2025-06-04 09:44:32,918] INFO in _internal: [33mPress CTRL+C to quit[0m
