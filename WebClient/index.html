@@ -6,21 +6,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Restaurante - Login</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
             font-family: Arial, sans-serif;
             background-color: #e0f7fa;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 40px 20px;
         }
-        h1 {
+        h1, h2 {
             color: #0288d1;
+            text-align: center;
+            margin: 20px;
+            padding: 10px;
             text-transform: uppercase;
             letter-spacing: 2px;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
-            margin-bottom: 30px;
+            font-weight: bold;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
         }
+        h1 { font-size: 3em; }
+        h2 { font-size: 2em; }
+
+        .navbar {
+            width: 100vw;
+            font-size: 2em;
+            background-color: #0277bd;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            padding: 5px;
+        }
+        .navbar-link {
+            color: #ffffff;
+            font-weight: bold;
+            text-decoration: none;
+            padding: 10px;
+            border: 1px solid #0277bd;
+        }
+        .navbar-link:hover {
+            border: 1px solid #ffffff;
+            border-radius: 4px;
+            background-color: #ffffff;
+            color: #0277bd;
+        }
+
         label {
             font-weight: bold;
             margin-top: 10px;
@@ -61,33 +94,6 @@
             gap: 15px;
         }
 
-        /* Navbar styles */
-        .navbar {
-            font-size: 1.8em;
-            background-color: #0277bd;
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            padding: 10px 0;
-            height: 50px;
-            align-items: center;
-            width: 100%;
-            margin-bottom: 40px;
-        }
-        .navbar-link {
-            color: #ffffff;
-            font-weight: bold;
-            text-decoration: none;
-            padding: 10px 20px;
-            border: 1px solid #0277bd;
-            border-radius: 4px;
-            white-space: nowrap;
-        }
-        .navbar-link:hover {
-            border: 1px solid #ffffff;
-            background-color: #ffffff;
-            color: #0277bd;
-        }
     </style>
     <script>
         var myHeaders = new Headers();
@@ -127,12 +133,10 @@
     </script>
 </head>
 <body>
+    <h1>Restaurant Managemet System</h1>
     <nav class="navbar">
         <a href="register.html" class="navbar-link">Nuevo Usuario</a>
     </nav>
-
-    <h1>Bienvenido al Sistema</h1>
-
     <label for="username">Usuario</label>
     <input type="text" id="username" name="username" autocomplete="username" />
 

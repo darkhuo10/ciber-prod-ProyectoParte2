@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Producto</title>
+    <title>RMS - Editar Producto</title>
     <style>
         * {
             margin: 0;
@@ -17,41 +17,42 @@
             background-color: #e0f7fa;
             font-size: 16px;
         }
-        h1 {
+        h1, h2 {
             color: #0288d1;
-            text-transform: uppercase;
             text-align: center;
             margin: 20px;
             padding: 10px;
+            text-transform: uppercase;
             letter-spacing: 2px;
             font-weight: bold;
             text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
         }
+        h1 { font-size: 3em; }
+        h2 { font-size: 2em; }
 
         .navbar {
+            width: 100vw;
             font-size: 2em;
             background-color: #0277bd;
             display: flex;
             gap: 20px;
             justify-content: center;
-            padding: 10px 0;
-            align-items: center;
-            width: 100%;
-            margin-bottom: 40px;
+            padding: 5px;
         }
         .navbar-link {
             color: #ffffff;
             font-weight: bold;
             text-decoration: none;
-            padding: 10px 20px;
+            padding: 10px;
             border: 1px solid #0277bd;
-            border-radius: 4px;
         }
         .navbar-link:hover {
+            border: 1px solid #ffffff;
+            border-radius: 4px;
             background-color: #ffffff;
             color: #0277bd;
-            border: 1px solid #ffffff;
         }
+
 
         .container {
             width: 80%;
@@ -120,17 +121,18 @@
 
         function updateProduct() {
             const params = new URLSearchParams(window.location.search);
-            const id = params.get("id");
+            const id = parseInt(params.get("id"));
             let productData = {
                 id: id,
                 name: document.getElementById('name').value,
-                number: document.getElementById('number').value,
+                number: parseInt(document.getElementById('number').value),
                 description: document.getElementById('description').value,
-                price: document.getElementById('price').value,
-                tax: document.getElementById('tax').value
+                price: parseFloat(document.getElementById('price').value),
+                tax: parseInt(document.getElementById('tax').value)
             };
+            console.log(productData)
 
-            fetch(`/api/product/update/${id}`, {
+            fetch(`/api/product/update`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(productData)
@@ -152,7 +154,7 @@
     </script>
 </head>
 <body>
-    <h1>Restaurant name</h1>
+    <h1>Restaurant Managemet System</h1>
     <nav class="navbar">
         <a href="products.html" class="navbar-link">Productos</a>
         <a href="javascript:logout()" class="navbar-link">Cerrar sesión</a>

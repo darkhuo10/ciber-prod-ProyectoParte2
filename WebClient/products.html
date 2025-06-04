@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Productos</title>
+    <title>RMS - Productos</title>
     <style>
         * {
             margin: 0;
@@ -16,22 +16,21 @@
             background-color: #e0f7fa;
             font-size: 16px;
         }
-        h1, h2{
-            color: #0288d1;               /* A shade of blue */
-            text-align: center;           /* Center the text */
-            margin: 20px;          /* Space below the title */
-            padding: 10px;                /* Add padding around the title */
-            text-transform: uppercase;    /* Make the text uppercase */
-            letter-spacing: 2px;          /* Slightly increase letter spacing */
-            font-weight: bold;            /* Make the font bold */
-            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);  /* Add shadow effect for depth */
-
+        h1, h2 {
+            color: #0288d1;
+            text-align: center;
+            margin: 20px;
+            padding: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: bold;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
         }
         h1 { font-size: 3em; }
         h2 { font-size: 2em; }
 
-
         .navbar {
+            width: 100vw;
             font-size: 2em;
             background-color: #0277bd;
             display: flex;
@@ -45,16 +44,12 @@
             text-decoration: none;
             padding: 10px;
             border: 1px solid #0277bd;
-
-           
         }
         .navbar-link:hover {
             border: 1px solid #ffffff;
             border-radius: 4px;
             background-color: #ffffff;
             color: #0277bd;
-            padding: 10px;
-
         }
 
         .container {
@@ -86,9 +81,10 @@
             border-radius: 4px;
             font-size: 16px;
         }
-        .btn-success { background: #01579b; color: white; text-decoration: none;    }
-        .btn-info { background: #03a9f4; color: white; text-decoration: none;}
+        .btn-success { background: #01579b; color: white; text-decoration: none; }
+        .btn-info { background: #03a9f4; color: white; text-decoration: none; }
         .btn-danger { background: red; color: white; }
+        .oculto { display: none; }
     </style>
     <script>
         var myHeaders = new Headers();
@@ -96,17 +92,29 @@
         if (sessionStorage.getItem("csrf_token")) {
             myHeaders.append("X-CSRFToken", sessionStorage.getItem("csrf_token"));
         }
+
         var role = "user";
 
         window.onload = function () {
             if (sessionStorage.getItem("role")) {
                 role = sessionStorage.getItem("role");
+
                 if (role === "admin") {
                     document.getElementById("enlaceAgregar").classList.remove("oculto");
+                } else {
+                    ocultarColumnasAdmin();
                 }
+            } else {
+                ocultarColumnasAdmin();
             }
+
             fetchProducts();
         };
+
+        function ocultarColumnasAdmin() {
+            document.getElementById("colEditar").classList.add("oculto");
+            document.getElementById("colEliminar").classList.add("oculto");
+        }
 
         function fetchProducts() {
             fetch("/api/products", { headers: myHeaders })
@@ -123,7 +131,6 @@
                     alert("Ha habido un error al recuperar los productos. Refresque la página.");
                 });
         }
-        
 
         function paintProducts(products) {
             let tbody = document.getElementById("products");
@@ -144,11 +151,10 @@
                     row += `<td><a href="edit_product.html?id=${product.id}" class="button btn-info">Editar</a></td>
                             <td><button class="button btn-danger" onclick="deleteProduct(${product.id})">Eliminar</button></td>`;
                 } else {
-                    row += `<td></td><td></td>`;
+                    row += `<td class="oculto"></td><td class="oculto"></td>`;
                 }
 
                 row += `</tr>`;
-
                 tbody.innerHTML += row;
             });
         }
@@ -190,7 +196,7 @@
     </script>
 </head>
 <body>
-    <h1>Restaurant name</h1>
+    <h1>Restaurant Managemet System</h1>
     <nav class="navbar">
         <a href="products.html" class="navbar-link">Productos</a>
         <a href="javascript:logout()" class="navbar-link">Cerrar sesión</a>
@@ -209,8 +215,8 @@
                         <th>Precio</th>
                         <th>IVA</th>
                         <th>Precio IVA</th>
-                        <th>Editar</th>
-                        <th>Eliminar</th>
+                        <th id="colEditar">Editar</th>
+                        <th id="colEliminar">Eliminar</th>
                     </tr>
                 </thead>
                 <tbody id="products"></tbody>
