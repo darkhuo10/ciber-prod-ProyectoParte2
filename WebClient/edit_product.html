@@ -102,59 +102,81 @@
     <script>
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
-        if (sessionStorage.getItem("csrf_token")) {
-            myHeaders.append("X-CSRFToken", sessionStorage.getItem("csrf_token"));
-        }
-        onload = function() {
-            const params = new URLSearchParams(window.location.search);
-            const id = params.get("id");
 
-            if (id) {
-                fetch(`/api/product/${id}`)
-                    .then(response => response.json())
-                    .then(product => {
-                        document.getElementById('id').value = product.id;
-                        document.getElementById('name').value = product.name;
-                        document.getElementById('number').value = product.number;
-                        document.getElementById('description').value = product.description;
-                        document.getElementById('price').value = product.price;
-                        document.getElementById('tax').value = product.tax;
-                    })
-                    .catch(() => alert("Error al cargar los detalles del producto"));
-            }
+        if (sessionStorage.getItem("csrf_token")){
+            myHeaders.append("X-CSRFToken",sessionStorage.getItem("csrf_token"))
         }
 
-        function updateProduct() {
-            const params = new URLSearchParams(window.location.search);
-            const id = parseInt(params.get("id"));
-            let productData = {
-                id: id,
-                name: document.getElementById('name').value,
-                number: parseInt(document.getElementById('number').value),
-                description: document.getElementById('description').value,
-                price: parseFloat(document.getElementById('price').value),
-                tax: parseInt(document.getElementById('tax').value)
+
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+        var id = urlParams.get('id');
+        onload = function () {
+            getProduct(id);
+        }
+        function getProduct(id) {
+            var requestOptions = {
+                method: 'GET',
+                headers: myHeaders
             };
-            console.log(productData)
 
-            fetch(`/api/product/update`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(productData)
-            })
-            .then(response => response.json())
-            .then(result => {
-                if (result.status === "OK") {
-                    alert("Producto actualizado correctamente");
-                    location.href = 'products.html';
-                } else {
-                    alert("Error al actualizar el producto");
-                }
-            })
-            .catch(error => {
-                console.error("Error al actualizar producto", error);
-                alert("Error al actualizar el producto");
+            fetch("/api/products/" + id, requestOptions)
+                .then(response => response.json())
+                .then(result => printProduct(result))
+                .catch(error => {
+                    alert("Ha habido un error al recuperar los datos del producto");
+                    location.href = "products.html";
+                });
+
+        }
+        function printProduct(product) {
+            console.log(product);
+            
+            document.getElementById("name").value = product.name;
+            document.getElementById("number").value = product.number;
+            document.getElementById("description").value = product.descption;
+            document.getElementById("price").value = product.price;
+            document.getElementById("tax").src = product.tax;
+        }
+
+        function guardar() {
+            let name = document.getElementById("name").value;
+            let number= document.getElementById("number").value;
+            let description = document.getElementById("description").value;
+            let price = document.getElementById("price").value;
+            let tax = document.getElementById("tax").value;
+            let datos = JSON.stringify({
+                "id": id,
+                "name": name,
+                "number": number,
+                "description": description,
+                "price": price,
+                "tax": tax
             });
+            var requestOptions = {
+                method: 'PUT',
+                headers: myHeaders,
+                body: datos
+            };
+
+            console.log(requestOptions);
+            
+
+            fetch("/api/update/prducts", requestOptions)
+                .then(response => response.json())
+                .then(result => {
+                    
+                    if (result.status == "OK") {
+                        alert("Producto modificado")
+                        location.href = "productos.html"
+                    } else {
+                        alert("La product no ha podido ser modificado")
+                    }
+                })
+                .catch(error => {
+                    console.log('error', error);
+                    alert("Se ha producido un error y el producto no ha podido ser modificado")
+                });
         }
     </script>
 </head>
@@ -208,8 +230,7 @@
 
                 <div class="field">
                     <div class="control">
-                        <button class="button" type="submit">Actualizar Producto</button>
-                    </div>
+                    <button type="button" onclick="guardar()" class="button is-success mt-2">Guardar</button>
                 </div>
             </form>
         </div>
