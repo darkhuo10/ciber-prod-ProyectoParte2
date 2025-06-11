@@ -1,0 +1,66 @@
+[2025-06-05 08:52:54,552] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://172.25.0.4:8080
+[2025-06-05 08:52:54,552] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2025-06-05 08:53:14,478] INFO in user_controller: Acceso user prueba correcto
+[2025-06-05 08:53:14,507] INFO in app: path: /login | method: POST | status: 200 OK | size: 142 >>> 172.25.0.5
+[2025-06-05 08:53:14,508] INFO in _internal: 172.25.0.5 - - [05/Jun/2025 08:53:14] "POST /login HTTP/1.1" 200 -
+[2025-06-05 08:53:14,586] INFO in app: path: /products | method: GET | status: 200 OK | size: 456 >>> 172.25.0.5
+[2025-06-05 08:53:14,586] INFO in _internal: 172.25.0.5 - - [05/Jun/2025 08:53:14] "GET /products HTTP/1.1" 200 -
+[2025-06-05 08:53:27,292] INFO in app: path: /product/create | method: POST | status: 400 BAD REQUEST | size: 117 >>> 172.25.0.5
+[2025-06-05 08:53:27,292] INFO in _internal: 172.25.0.5 - - [05/Jun/2025 08:53:27] "[31m[1mPOST /product/create HTTP/1.1[0m" 400 -
+[2025-06-05 08:53:29,332] INFO in app: path: /products | method: GET | status: 200 OK | size: 456 >>> 172.25.0.5
+[2025-06-05 08:53:29,333] INFO in _internal: 172.25.0.5 - - [05/Jun/2025 08:53:29] "GET /products HTTP/1.1" 200 -
+[2025-06-05 08:53:35,047] INFO in app: path: /logout | method: GET | status: 200 OK | size: 16 >>> 172.25.0.5
+[2025-06-05 08:53:35,048] INFO in _internal: 172.25.0.5 - - [05/Jun/2025 08:53:35] "GET /logout HTTP/1.1" 200 -
+[2025-06-05 08:53:48,411] INFO in user_controller: Nuevo user creado
+[2025-06-05 08:53:48,411] INFO in app: path: /register | method: POST | status: 200 OK | size: 16 >>> 172.25.0.5
+[2025-06-05 08:53:48,411] INFO in _internal: 172.25.0.5 - - [05/Jun/2025 08:53:48] "POST /register HTTP/1.1" 200 -
+[2025-06-05 08:53:53,319] INFO in user_controller: Acceso user jorge.martin103 correcto
+[2025-06-05 08:53:53,355] INFO in app: path: /login | method: POST | status: 200 OK | size: 141 >>> 172.25.0.5
+[2025-06-05 08:53:53,355] INFO in _internal: 172.25.0.5 - - [05/Jun/2025 08:53:53] "POST /login HTTP/1.1" 200 -
+[2025-06-05 08:53:53,390] INFO in app: path: /products | method: GET | status: 200 OK | size: 456 >>> 172.25.0.5
+[2025-06-05 08:53:53,391] INFO in _internal: 172.25.0.5 - - [05/Jun/2025 08:53:53] "GET /products HTTP/1.1" 200 -
+[2025-06-05 08:54:01,040] INFO in app: path: /logout | method: GET | status: 200 OK | size: 16 >>> 172.25.0.5
+[2025-06-05 08:54:01,040] INFO in _internal: 172.25.0.5 - - [05/Jun/2025 08:54:01] "GET /logout HTTP/1.1" 200 -
+[2025-06-05 08:55:26,041] INFO in user_controller: Acceso user prueba correcto
+[2025-06-05 08:55:26,041] INFO in app: path: /login | method: POST | status: 200 OK | size: 142 >>> 172.25.0.5
+[2025-06-05 08:55:26,041] INFO in _internal: 172.25.0.5 - - [05/Jun/2025 08:55:26] "POST /login HTTP/1.1" 200 -
+[2025-06-05 08:55:26,126] INFO in app: path: /products | method: GET | status: 200 OK | size: 456 >>> 172.25.0.5
+[2025-06-05 08:55:26,126] INFO in _internal: 172.25.0.5 - - [05/Jun/2025 08:55:26] "GET /products HTTP/1.1" 200 -
+[2025-06-06 08:24:28,075] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://172.25.0.2:8080
+[2025-06-06 08:24:28,111] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2025-06-06 08:59:33,133] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://172.25.0.2:8080
+[2025-06-06 08:59:33,156] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2025-06-06 09:41:22,939] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://172.25.0.2:8080
+[2025-06-06 09:41:22,958] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2025-06-06 09:45:15,365] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://172.25.0.3:8080
+[2025-06-06 09:45:15,414] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2025-06-06 10:28:31,560] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://172.25.0.3:8080
+[2025-06-06 10:28:31,596] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2025-06-09 06:46:46,651] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://172.25.0.4:8080
+[2025-06-09 06:46:46,666] INFO in _internal: [33mPress CTRL+C to quit[0m
+[2025-06-11 06:36:32,546] INFO in _internal: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://172.25.0.2:8080
+[2025-06-11 06:36:32,572] INFO in _internal: [33mPress CTRL+C to quit[0m
